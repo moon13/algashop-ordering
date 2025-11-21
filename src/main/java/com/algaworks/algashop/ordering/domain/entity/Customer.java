@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.validator.FieldValidations;
+import com.algaworks.algashop.ordering.exceptions.CustomerArchivedException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -106,6 +107,9 @@ public class Customer {
 
     private void setLoyaltyPointd(Integer loyaltyPointd) {
         Objects.requireNonNull(loyaltyPointd);
+        if(loyaltyPointd < 0){
+            throw new IllegalArgumentException();
+        }
         this.loyaltyPointd = loyaltyPointd;
     }
 
@@ -170,39 +174,61 @@ public class Customer {
         return loyaltyPointd;
     }
 
-    public void addLoyaltyPoints(Integer points){
-
+    public void addLoyaltyPoints(Integer loyaltyPointsAdded){
+        verifyIfChangeable();
+        if(loyaltyPointsAdded <= 0 ){
+            throw  new IllegalArgumentException();
         }
+        this.setLoyaltyPointd(loyaltyPointd + loyaltyPointsAdded);
+
+
+
+    }
 
         public void archive(){
 
-         this.setArchived(true);
+            verifyIfChangeable();
+            this.setArchived(true);
          this.setFullNAme("Anonymous");
          this.setPhone("000-000-0000");
          this.setDocument("000-00-0000");
          this.setEmail(UUID.randomUUID()+"@anonymous.com");
          this.setBirthdate(null);
+         this.setPromotionNotificationAllowed(false);
         }
 
-        public void enablePromotionNotifications(){
+
+
+    public void enablePromotionNotifications(){
+             verifyIfChangeable();
              this.setPromotionNotificationAllowed(true);
         }
 
         public void disablePromotionNotifications(){
+            verifyIfChangeable();
             this.setPromotionNotificationAllowed(false);
         }
 
         public void changeName(String fullName){
+            verifyIfChangeable();
              this.setFullNAme(fullName);
         }
 
         public void changeEmail(String email){
+            verifyIfChangeable();
             this.setEmail(email);
         }
 
         public void changePhone(String phone){
+            verifyIfChangeable();
             this.setPhone(phone);
         }
+
+    private void verifyIfChangeable() {
+        if ( this.isArchived()){
+            throw new CustomerArchivedException();
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
