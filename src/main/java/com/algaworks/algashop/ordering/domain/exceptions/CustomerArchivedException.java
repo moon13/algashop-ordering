@@ -1,6 +1,6 @@
-package com.algaworks.algashop.ordering.exceptions;
+package com.algaworks.algashop.ordering.domain.exceptions;
 
-import static com.algaworks.algashop.ordering.exceptions.ErrorMessages.ERROR_CUSTOMER_ARCHIVED;
+import static com.algaworks.algashop.ordering.domain.exceptions.ErrorMessages.ERROR_CUSTOMER_ARCHIVED;
 
 public class CustomerArchivedException extends DomainException{
 
