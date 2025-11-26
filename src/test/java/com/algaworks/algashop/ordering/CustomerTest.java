@@ -2,9 +2,7 @@ package com.algaworks.algashop.ordering;
 
 import com.algaworks.algashop.ordering.domain.entity.Customer;
 import com.algaworks.algashop.ordering.domain.utility.IdGenerator;
-import com.algaworks.algashop.ordering.domain.valueobject.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.FullName;
-import com.algaworks.algashop.ordering.domain.valueobject.LoyaltyPoints;
+import com.algaworks.algashop.ordering.domain.valueobject.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -17,11 +15,11 @@ public class CustomerTest {
     public void testingCustomer(){
         Customer customer = new Customer(
                 new CustomerId(),
-               "478-256-2504",
-               "teste",
-                "John.doe@email.com",
+               new Document("478-256-2504"),
+               new Phone("teste"),
+                new Email("John.doe@email.com"),
                 new FullName("John","Doe"),
-                LocalDate.of(1991,7,5),
+                new Birthdate(LocalDate.of(1991,7,5)),
                 true,
                 OffsetDateTime.now());
 

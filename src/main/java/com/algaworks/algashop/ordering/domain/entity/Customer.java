@@ -2,9 +2,7 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.validator.FieldValidations;
 import com.algaworks.algashop.ordering.domain.exceptions.CustomerArchivedException;
-import com.algaworks.algashop.ordering.domain.valueobject.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.FullName;
-import com.algaworks.algashop.ordering.domain.valueobject.LoyaltyPoints;
+import com.algaworks.algashop.ordering.domain.valueobject.*;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -18,18 +16,18 @@ public class Customer {
 
      private CustomerId id;
      private FullName fullNAme;
-     private LocalDate birthdate;
-     private String email;
-     private String phone;
-     private String document;
+     private Birthdate birthdate;
+     private Email email;
+     private Phone phone;
+     private Document document;
      private Boolean promotionNotificationAllowed;
      private Boolean archived;
      private OffsetDateTime registeredAt;
      private OffsetDateTime archivedAt;
      private LoyaltyPoints loyaltyPointd;
 
-    public Customer(CustomerId id, String document, String phone, String email,
-                    FullName fullNAme, LocalDate birthdate,
+    public Customer(CustomerId id, Document document, Phone phone, Email email,
+                    FullName fullNAme, Birthdate birthdate,
                     Boolean promotionNotificationAllowed,
                     OffsetDateTime registeredAt) {
         this.setId(id);
@@ -55,30 +53,30 @@ public class Customer {
         this.fullNAme = fullNAme;
     }
 
-    private void setBirthdate(LocalDate birthdate) {
+    private void setBirthdate(Birthdate birthdate) {
 
         if(birthdate == null){
             this.birthdate = null;
             return;
         }
-        if (birthdate.isAfter(LocalDate.now())){
-            throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
-        }
+//        if (birthdate.isAfter(LocalDate.now())){
+//            throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
+//        }
         this.birthdate = birthdate;
     }
 
-    private void setEmail(String email) {
-        FieldValidations.requiresValidEmail(email,VALIDATION_ERROR_EMAIL_IS_INVALID);
+    private void setEmail(Email email) {
+       // FieldValidations.requiresValidEmail(email,VALIDATION_ERROR_EMAIL_IS_INVALID);
         this.email = email;
     }
 
-    private void setPhone(String phone) {
-        Objects.requireNonNull(phone);
+    private void setPhone(Phone phone) {
+        //Objects.requireNonNull(phone);
         this.phone = phone;
     }
 
-    private void setDocument(String document) {
-        Objects.requireNonNull(document);
+    private void setDocument(Document document) {
+        //Objects.requireNonNull(document);
         this.document = document;
     }
 
@@ -107,8 +105,8 @@ public class Customer {
         this.loyaltyPointd = loyaltyPointd;
     }
 
-    public Customer(CustomerId id, FullName fullNAme, LocalDate birthdate, String email,
-                    String phone, String document, Boolean promotionNotificationAllowed,
+    public Customer(CustomerId id, FullName fullNAme, Birthdate birthdate, Email email,
+                    Phone phone, Document document, Boolean promotionNotificationAllowed,
                     Boolean archived, OffsetDateTime registeredAt, OffsetDateTime archivedAt,
                     LoyaltyPoints loyaltyPointd) {
         this.setId(id);
@@ -132,19 +130,19 @@ public class Customer {
         return fullNAme;
     }
 
-    public LocalDate birthdate() {
+    public Birthdate birthdate() {
         return birthdate;
     }
 
-    public String email() {
+    public Email email() {
         return email;
     }
 
-    public String phone() {
+    public Phone phone() {
         return phone;
     }
 
-    public String document() {
+    public Document document() {
         return document;
     }
 
@@ -182,10 +180,10 @@ public class Customer {
             verifyIfChangeable();
             this.setArchived(true);
          this.setFullNAme(new FullName("Anonymous","Anonymous"));
-         this.setPhone("000-000-0000");
-         this.setDocument("000-00-0000");
-         this.setEmail(UUID.randomUUID()+"@anonymous.com");
-         this.setBirthdate(null);
+         this.setPhone(new Phone("000-000-0000"));
+         this.setDocument(new Document("000-00-0000"));
+         this.setEmail(new Email(UUID.randomUUID()+"@anonymous.com"));
+         this.setBirthdate(new Birthdate(null));
          this.setPromotionNotificationAllowed(false);
         }
 
@@ -206,12 +204,12 @@ public class Customer {
              this.setFullNAme(fullName);
         }
 
-        public void changeEmail(String email){
+        public void changeEmail(Email email){
             verifyIfChangeable();
             this.setEmail(email);
         }
 
-        public void changePhone(String phone){
+        public void changePhone(Phone phone){
             verifyIfChangeable();
             this.setPhone(phone);
         }
