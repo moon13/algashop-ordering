@@ -183,7 +183,7 @@ public class Customer {
          this.setPhone(new Phone("000-000-0000"));
          this.setDocument(new Document("000-00-0000"));
          this.setEmail(new Email(UUID.randomUUID()+"@anonymous.com"));
-         this.setBirthdate(new Birthdate(null));
+         this.setBirthdate(null);
          this.setPromotionNotificationAllowed(false);
         }
 

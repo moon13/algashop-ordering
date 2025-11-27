@@ -82,7 +82,7 @@ class CustomerTest {
         Customer customer = new Customer(
                 new CustomerId(),
                 new FullName("Anonymous","Anonymous"),
-                new Birthdate(null),
+                null,
                 new Email("anonymous@anonymous.com"),
                 new Phone("000-000-0000"),
                 new Document("000-00-0000"),
