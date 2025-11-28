@@ -3,6 +3,7 @@ package com.algaworks.algashop.ordering.domain.entity;
 import com.algaworks.algashop.ordering.domain.validator.FieldValidations;
 import com.algaworks.algashop.ordering.domain.exceptions.CustomerArchivedException;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -25,22 +26,48 @@ public class Customer {
      private OffsetDateTime registeredAt;
      private OffsetDateTime archivedAt;
      private LoyaltyPoints loyaltyPointd;
+     private Address address;
 
-    public Customer(CustomerId id, Document document, Phone phone, Email email,
-                    FullName fullNAme, Birthdate birthdate,
-                    Boolean promotionNotificationAllowed,
-                    OffsetDateTime registeredAt) {
-        this.setId(id);
-        this.setDocument(document);
-        this.setPhone(phone);
-        this.setEmail(email);
-        this.setFullNAme(fullNAme);
-        this.setBirthdate(birthdate);
-        this.setPromotionNotificationAllowed(promotionNotificationAllowed);
-        this.setRegisteredAt(registeredAt);
-        this.setArchived(false);
-        this.setLoyaltyPointd(LoyaltyPoints.ZERO);
-    }
+     @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
+     private static Customer createBrandNew(Document document, Phone phone, Email email,
+                                     FullName fullNAme, Birthdate birthdate,
+                                     Boolean promotionNotificationAllowed,
+                                     Address address){
+
+         return new Customer(new CustomerId(),
+                            fullNAme,
+                            birthdate,
+                            email,
+                            phone,
+                            document,
+                            promotionNotificationAllowed,
+                            false,
+                            OffsetDateTime.now(),
+                             null,
+                            LoyaltyPoints.ZERO,
+                            address
+         );
+
+     }
+
+
+//    public Customer(CustomerId id, Document document, Phone phone, Email email,
+//                    FullName fullNAme, Birthdate birthdate,
+//                    Boolean promotionNotificationAllowed,
+//                    OffsetDateTime registeredAt,
+//                    Address address) {
+//        this.setId(id);
+//        this.setDocument(document);
+//        this.setPhone(phone);
+//        this.setEmail(email);
+//        this.setFullNAme(fullNAme);
+//        this.setBirthdate(birthdate);
+//        this.setPromotionNotificationAllowed(promotionNotificationAllowed);
+//        this.setRegisteredAt(registeredAt);
+//        this.setArchived(false);
+//        this.setLoyaltyPointd(LoyaltyPoints.ZERO);
+//        this.setAddress(address);
+//    }
 
     private void setId(CustomerId id) {
         Objects.requireNonNull(id);
@@ -105,10 +132,39 @@ public class Customer {
         this.loyaltyPointd = loyaltyPointd;
     }
 
-    public Customer(CustomerId id, FullName fullNAme, Birthdate birthdate, Email email,
+    private void setAddress(Address address) {
+        Objects.requireNonNull(address);
+        this.address = address;
+    }
+
+    @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
+    private static Customer createExisting(CustomerId id, FullName fullNAme, Birthdate birthdate, Email email,
+                                    Phone phone, Document document, Boolean promotionNotificationAllowed,
+                                    Boolean archived, OffsetDateTime registeredAt, OffsetDateTime archivedAt,
+                                    LoyaltyPoints loyaltyPointd,
+                                    Address address){
+            return new Customer(
+                    id,
+                    fullNAme,
+                    birthdate,
+                    email,
+                    phone,
+                     document,
+                    promotionNotificationAllowed,
+                    archived,
+                    registeredAt,
+                     archivedAt,
+                    loyaltyPointd,
+                    address
+
+            );
+    }
+
+    private Customer(CustomerId id, FullName fullNAme, Birthdate birthdate, Email email,
                     Phone phone, Document document, Boolean promotionNotificationAllowed,
                     Boolean archived, OffsetDateTime registeredAt, OffsetDateTime archivedAt,
-                    LoyaltyPoints loyaltyPointd) {
+                    LoyaltyPoints loyaltyPointd,
+                    Address address) {
         this.setId(id);
         this.setFullNAme(fullNAme);
         this.setBirthdate(birthdate);
@@ -120,6 +176,7 @@ public class Customer {
         this.setRegisteredAt(registeredAt);
         this.setArchivedAt(archivedAt);
         this.setLoyaltyPointd(loyaltyPointd);
+        this.setAddress(address);
     }
 
     public CustomerId id() {
@@ -170,12 +227,13 @@ public class Customer {
         verifyIfChangeable();
 
         this.setLoyaltyPointd(loyaltyPointd.add(loyaltyPointsAdded));
-
-
-
     }
 
-        public void archive(){
+    public Address address() {
+        return address;
+    }
+
+    public void archive(){
 
             verifyIfChangeable();
             this.setArchived(true);
@@ -185,6 +243,8 @@ public class Customer {
          this.setEmail(new Email(UUID.randomUUID()+"@anonymous.com"));
          this.setBirthdate(null);
          this.setPromotionNotificationAllowed(false);
+         this.setAddress(this.address().toBuilder()
+                 .number("Anonymized").complement(null).build());
         }
 
 
@@ -212,6 +272,11 @@ public class Customer {
         public void changePhone(Phone phone){
             verifyIfChangeable();
             this.setPhone(phone);
+        }
+
+        public void changeAddress(Address address){
+            verifyIfChangeable();
+            this.setAddress(address);
         }
 
     private void verifyIfChangeable() {
