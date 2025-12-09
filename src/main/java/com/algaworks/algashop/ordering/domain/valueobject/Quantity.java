@@ -20,6 +20,7 @@ public record Quantity(Integer value) implements Comparable<Quantity> {
 
     public Quantity add(Quantity other) {
         Objects.requireNonNull(value, ErrorMessages.VALIDATION_ERROR_QUANTITY_IS_NULL);
+        Objects.requireNonNull(other, ErrorMessages.VALIDATION_ERROR_QUANTITY_IS_NULL);
         return new Quantity(this.value + other.value);
     }
 
