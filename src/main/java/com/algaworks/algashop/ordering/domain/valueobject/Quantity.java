@@ -27,6 +27,7 @@ public record Quantity(Integer value) implements Comparable<Quantity> {
     @Override
     public int compareTo(Quantity other) {
         Objects.requireNonNull(value, ErrorMessages.VALIDATION_ERROR_QUANTITY_IS_NULL);
+        Objects.requireNonNull(other, ErrorMessages.VALIDATION_ERROR_QUANTITY_IS_NULL);
         return this.value.compareTo(other.value);
     }
 

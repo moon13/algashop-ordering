@@ -36,16 +36,20 @@ public record Money(BigDecimal value) implements Comparable<Money> {
 
     public Money add(Money other) {
         Objects.requireNonNull(other, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
+        Objects.requireNonNull(value, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
         return new Money(this.value.add(other.value));
     }
 
     public Money divide(Money other) {
         Objects.requireNonNull(other, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
+        Objects.requireNonNull(value, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
         return new Money(this.value.divide(other.value, roundingMode));
     }
 
     @Override
     public int compareTo(Money o) {
+        Objects.requireNonNull(o, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
+        Objects.requireNonNull(value, ErrorMessages.VALIDATION_ERROR_MONEY_IS_NULL);
         return this.value.compareTo(o.value);
     }
 
