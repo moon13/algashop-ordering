@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record CustomerId(UUID value) {
 
-    CustomerId{
+    public CustomerId{
         Objects.requireNonNull(value);
     }
 
