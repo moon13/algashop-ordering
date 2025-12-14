@@ -40,15 +40,19 @@ public class OrderItem {
     private static OrderItem createBrandNew(OrderId orderId, ProductId productId,
                      ProductName productName, Money price,
                      Quantity quantity ) {
-         return new OrderItem(
-                 new OrderItemId(),
+        OrderItem orderItem = new OrderItem(
+                new OrderItemId(),
                 orderId,
-                 productId,
-                 productName,
-                 price,
-                 quantity,
-                 Money.ZERO
-         );
+                productId,
+                productName,
+                price,
+                quantity,
+                Money.ZERO
+        );
+
+        orderItem.recalculateTotals();
+
+        return orderItem;
     }
 
     public OrderItemId id() {
@@ -79,6 +83,10 @@ public class OrderItem {
         return totalAmount;
     }
 
+
+    private void recalculateTotals(){
+         this.setTotalAmount(price.multiply(this.quantity()));
+    }
 
     private void setId(OrderItemId id) {
         Objects.requireNonNull(id);
