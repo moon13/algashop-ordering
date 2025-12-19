@@ -23,5 +23,7 @@ public class ErrorMessages {
     public static final String VALIDATION_ERROR_PHONE_IS_BLANK_OR_NULL = "Phone cannot be blank or null";
     public static final String VALIDATION_ERROR_ADDRESS_IS_NULL = "ZipCode cannot be null";
 
+    public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED = "Cannot change order %s status from %s to %s";
+
 
 }

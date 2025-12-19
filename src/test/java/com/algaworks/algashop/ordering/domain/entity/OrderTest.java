@@ -1,6 +1,7 @@
 package com.algaworks.algashop.ordering.domain.entity;
 
 
+import com.algaworks.algashop.ordering.domain.exceptions.OrderStatusCannotBeChangedException;
 import com.algaworks.algashop.ordering.domain.valueobject.Money;import com.algaworks.algashop.ordering.domain.valueobject.ProductName;import com.algaworks.algashop.ordering.domain.valueobject.Quantity;import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;import org.assertj.core.api.Assertions;import org.junit.jupiter.api.Test;
 
@@ -79,4 +80,25 @@ class OrderTest {
 
 
     }
+
+    @Test
+    public void givenDraftOrder_whenPlace_ShouldChangeToPlaced(){
+        Order order = Order.draft(new CustomerId());
+
+        order.place();
+
+        Assertions.assertThat(order.isPlaced()).isTrue();
+
+    }
+
+    @Test
+    public void givenPlacedOrder_WhenTryToPlace_ShouldGenerateException(){
+        Order order = Order.draft(new CustomerId());
+
+        order.place();
+
+        Assertions.assertThatExceptionOfType(OrderStatusCannotBeChangedException.class)
+                .isThrownBy(()->order.place());
+    }
+
 }
