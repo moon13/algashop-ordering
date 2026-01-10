@@ -87,7 +87,6 @@ class OrderTest {
     @Test
     public void givenDraftOrder_whenPlace_ShouldChangeToPlaced(){
         Order order = OrderTestDataBuilder.anOrder().build();
-
         order.place();
 
         Assertions.assertThat(order.isPlaced()).isTrue();
