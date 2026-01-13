@@ -85,9 +85,9 @@ public class OrderTestDataBuilder {
         order.changePaymentMethod(paymentMethod);
 
         if(withItems){
-         order.addItem(new ProductId(), new ProductName("Notebook X11"), new Money("3000"),
+         order.addItem(ProductTestDataBuilder.aProduct().build(),
                  new Quantity(2));
-            order.addItem(new ProductId(), new ProductName("4GM RAM"), new Money("200"),
+            order.addItem(ProductTestDataBuilder.aProductAltRamMemory().build(),
                     new Quantity(2));
 
 

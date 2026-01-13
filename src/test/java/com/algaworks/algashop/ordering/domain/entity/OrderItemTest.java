@@ -12,11 +12,11 @@ class OrderItemTest {
 
     @Test
     public void shouldGenerate(){
-        OrderItem.brandNew().productId(new ProductId()).
-                quantity(new Quantity(1))
+        OrderItem.brandNew().
+                product(ProductTestDataBuilder.aProduct().build())
+                .quantity(new Quantity(1))
                 .orderId(new OrderId())
-                .productName(new ProductName("Mousepad"))
-                .price(new Money("100")).build();
+                 .build();
     }
 
 }
