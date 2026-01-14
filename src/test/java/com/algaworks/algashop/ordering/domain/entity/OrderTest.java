@@ -3,9 +3,12 @@ package com.algaworks.algashop.ordering.domain.entity;
 
 import com.algaworks.algashop.ordering.domain.exceptions.OrderInvalidShippingDeliveryDateException;
 import com.algaworks.algashop.ordering.domain.exceptions.OrderStatusCannotBeChangedException;
+import com.algaworks.algashop.ordering.domain.exceptions.ProductOutOfStockException;
 import com.algaworks.algashop.ordering.domain.valueobject.*;
 import com.algaworks.algashop.ordering.domain.valueobject.id.CustomerId;
-import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;import org.assertj.core.api.Assertions;import org.junit.jupiter.api.Test;
+import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -234,4 +237,18 @@ class OrderTest {
         );
      }
 
+
+     @Test
+    public void givenOutOfStockProduct_whenTryToAddAnOrder_shouldNotAllow(){
+        Order order = Order.draft(new CustomerId());
+
+         ThrowableAssert.ThrowingCallable addItemTask = () -> order.addItem(
+                 ProductTestDataBuilder.aProductUnavailable().build(),
+                 new Quantity(1)
+         );
+
+          Assertions.assertThatExceptionOfType(ProductOutOfStockException.class)
+                  .isThrownBy(addItemTask);
+
+     }
 }
