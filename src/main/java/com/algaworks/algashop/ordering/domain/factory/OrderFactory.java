@@ -28,7 +28,7 @@ public class OrderFactory {
 
          Objects.requireNonNull(customerId);
          Objects.requireNonNull(shipping);
-         Objects.requireNonNull(billing;
+         Objects.requireNonNull(billing);
          Objects.requireNonNull(paymentMethod);
          Objects.requireNonNull(product);
          Objects.requireNonNull(productQuantity);
