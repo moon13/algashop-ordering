@@ -1,13 +1,13 @@
 package com.algaworks.algashop.ordering.domain.exceptions;
 
+import java.util.Locale;
+
 public class ErrorMessages {
 
     public static final String VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST = "BirthDate must be a past date";
 
     public static final String VALIDATION_ERROR_FULLNAME_IS_NULL = "FullName cannot be null";
-    public static final String VALIDATION_ERROR_FULLNAME_IS_BLANK = "FullName cannot be blank";
 
-    public static final String VALIDATION_ERROR_EMAIL_IS_INVALID = "Email is invalid";
 
     public static final String ERROR_CUSTOMER_ARCHIVED = "Customer is archived cannot be changed";
 
@@ -19,9 +19,7 @@ public class ErrorMessages {
     public static final String VALIDATION_ERROR_QUANTITY_NEGATIVE = "Quantity must be 0 or higher";
 
     public static final String VALIDATION_ERROR_PRODUCT_NAME_IS_BLANK_OR_NULL = "Product Name cannot be blank or null";
-    public static final String VALIDATION_ERROR_DOCUMENT_IS_BLANK_OR_NULL = "Document cannot be blank or null";
-    public static final String VALIDATION_ERROR_PHONE_IS_BLANK_OR_NULL = "Phone cannot be blank or null";
-    public static final String VALIDATION_ERROR_ADDRESS_IS_NULL = "ZipCode cannot be null";
+
 
     public static final String ERROR_ORDER_STATUS_CANNOT_BE_CHANGED = "Cannot change order %s status from %s to %s";
 
@@ -41,4 +39,5 @@ public class ErrorMessages {
             = "Order %s cannot be placed, it has no payment method";
     public static final String ERROR_ORDER_DOES_NOT_CONTAIN_ITEM = "Order %s does not contain item %s";
     public static final String ERROR_PRODUCT_IS_OUT_OF_STOCK = "PRoduct %s is out of stock" ;
+    public static final String ERROR_ORDER_CANNOT_BE_EDITED = "Order %s with status %s cannot be edited";
 }
