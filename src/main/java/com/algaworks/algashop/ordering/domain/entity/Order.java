@@ -223,6 +223,20 @@ public class Order {
         return Collections.unmodifiableSet(this.items);
     }
 
+
+    public void removeItem(OrderItemId orderItemId){
+          Objects.requireNonNull(orderItemId);
+        this.verifyIfChangeable();
+
+        OrderItem orderItem = findOrderItem(orderItemId);
+        this.items.remove(orderItem);
+
+
+        this.recalculateTotals();
+
+    }
+
+
     private void verifyIfChangeable() {
         if (!this.isDraft()) {
             throw new OrderCannotBeEditedException(this.id(), this.status());
