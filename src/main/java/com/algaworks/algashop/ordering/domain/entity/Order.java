@@ -236,6 +236,11 @@ public class Order {
 
     }
 
+    public void markAsReady() {
+        this.changeStatus(OrderStatus.READY);
+        this.setReadyAt(OffsetDateTime.now());
+    }
+
 
     private void verifyIfChangeable() {
         if (!this.isDraft()) {
