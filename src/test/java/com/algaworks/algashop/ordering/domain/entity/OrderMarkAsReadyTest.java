@@ -53,8 +53,8 @@ class OrderMarkAsReadyTest {
                 .isThrownBy(order::markAsReady);
 
         Assertions.assertWith(order,
-                (o) -> Assertions.assertThat(o.status()).isEqualTo(OrderStatus.DRAFT),
-                (o) -> Assertions.assertThat(o.readyAt()).isNull()
+                (o) -> Assertions.assertThat(o.status()).isEqualTo(OrderStatus.READY),
+                (o) -> Assertions.assertThat(o.readyAt()).isNotNull()
         );
     }
 }
