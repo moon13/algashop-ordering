@@ -243,7 +243,7 @@ public class Order {
 
 
     public void cancel(){
-       this.canceledAt = OffsetDateTime.now();
+       this.setCanceledAt(OffsetDateTime.now());
         this.changeStatus(OrderStatus.CANCELED);
     }
 

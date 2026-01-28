@@ -33,6 +33,47 @@ public class OrderCancelTest {
         );
     }
 
+
+    @Test
+    void givenFilledOrder_whenPlacedCancel_shouldAllow() {
+        Order order = OrderTestDataBuilder.anOrder().orderStatus(OrderStatus.PLACED).build();
+
+        order.cancel();
+
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.status()).isEqualTo(OrderStatus.CANCELED),
+                (i) -> Assertions.assertThat(i.isCanceled()).isTrue(),
+                (i) -> Assertions.assertThat(i.canceledAt()).isNotNull()
+        );
+    }
+
+    @Test
+    void givenFilledOrder_whenPaidCancel_shouldAllow() {
+        Order order = OrderTestDataBuilder.anOrder().orderStatus(OrderStatus.PAID).build();
+
+        order.cancel();
+
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.status()).isEqualTo(OrderStatus.CANCELED),
+                (i) -> Assertions.assertThat(i.isCanceled()).isTrue(),
+                (i) -> Assertions.assertThat(i.canceledAt()).isNotNull()
+        );
+    }
+
+    @Test
+    void givenFilledOrder_whenReadyCancel_shouldAllow() {
+        Order order = OrderTestDataBuilder.anOrder().orderStatus(OrderStatus.READY).build();
+
+        order.cancel();
+
+        Assertions.assertWith(order,
+                (i) -> Assertions.assertThat(i.status()).isEqualTo(OrderStatus.CANCELED),
+                (i) -> Assertions.assertThat(i.isCanceled()).isTrue(),
+                (i) -> Assertions.assertThat(i.canceledAt()).isNotNull()
+        );
+    }
+
+
     @Test
     void givenCanceledOrder_whenCancelAgain_shouldThrowException() {
         Order order = OrderTestDataBuilder.anOrder().orderStatus(OrderStatus.CANCELED).build();
