@@ -1,0 +1,162 @@
+package com.algaworks.algashop.ordering.domain.entity;
+
+import com.algaworks.algashop.ordering.domain.exceptions.ShoppingCartItemIncompatibleProductException;
+import com.algaworks.algashop.ordering.domain.valueobject.Money;
+import com.algaworks.algashop.ordering.domain.valueobject.Product;
+import com.algaworks.algashop.ordering.domain.valueobject.ProductName;
+import com.algaworks.algashop.ordering.domain.valueobject.Quantity;
+import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
+import com.algaworks.algashop.ordering.domain.valueobject.id.ShoppingCartId;
+import com.algaworks.algashop.ordering.domain.valueobject.id.ShoppingCartItemId;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class ShoppingCartItemTest {
+
+    @Test
+    public void givenValidData_whenCreateNewItem_shouldInitializeCorrectly() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .productName(new ProductName("Notebook"))
+                .price(new Money("2000"))
+                .quantity(new Quantity(2))
+                .available(true)
+                .build();
+
+        //Verifica se dados iniciais de um ShoppingCartItem estão preenchidos
+        //corretamente, isto é, nome do produto Notebook, quantidade 2, preço 2000
+        //chama o metodo recalculateTotals com valor 4000
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.id()).isNotNull(),
+                i -> Assertions.assertThat(i.shoppingCartId()).isNotNull(),
+                i -> Assertions.assertThat(i.productId()).isNotNull(),
+                i -> Assertions.assertThat(i.name()).isEqualTo(new ProductName("Notebook")),
+                i -> Assertions.assertThat(i.price()).isEqualTo(new Money("2000")),
+                i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(2)),
+                i -> Assertions.assertThat(i.isAvailable()).isTrue(),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("4000"))
+        );
+    }
+
+
+    @Test
+    public void givenItem_whenChangeQuantity_shouldRecalculateTotal() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .price(new Money("1000"))
+                .quantity(new Quantity(1))
+                .build();
+        //Quando chamaos o metodo changeQuantity ira chamar recalculateTotals e multiplicar
+        // a quantidade nova 3 pelo preço do produto 1000, que dara o totalamount em 3000
+        item.changeQuantity(new Quantity(3));
+
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.quantity()).isEqualTo(new Quantity(3)),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(new Money("3000"))
+        );
+    }
+
+    @Test
+    public void givenItem_whenChangeQuantityToZero_shouldGenerateException() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .quantity(new Quantity(5))
+                .build();
+        //Verifica que nao é possivel trocar a quantity para zero.
+        Assertions.assertThatIllegalArgumentException()
+                .isThrownBy(() -> item.changeQuantity(new Quantity(0)));
+    }
+
+
+    @Test
+    public void givenItem_whenChangeProduct_shouldGenerateException() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .quantity(new Quantity(5))
+                .build();
+
+        Product product = ProductTestDataBuilder.aProduct().build();
+        Product product2 = ProductTestDataBuilder.aProduct().build();
+
+        item.refresh(product);
+
+        //Verifica se são products diferentes
+        Assertions.assertThatExceptionOfType(ShoppingCartItemIncompatibleProductException.class)
+                .isThrownBy(() ->  item.refresh(product2));
+    }
+
+
+
+
+
+    @Test
+    public void givenItem_whenChangePrice_shouldRecalculateTotal() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .price(new Money("1500"))
+                .quantity(new Quantity(2))
+                .build();
+        //Verifica que quando atualiza o preço do produto, ele continua com a quantity anterior (2)
+        Product product = ProductTestDataBuilder.aProduct().build();
+        item.refresh(product);
+        //O novo preço sera 3000, e total amount 6000
+        Assertions.assertWith(item,
+                i -> Assertions.assertThat(i.price()).isEqualTo(product.price()),
+                i -> Assertions.assertThat(i.totalAmount()).isEqualTo(product.price().multiply(new Quantity(2)))
+        );
+    }
+
+    @Test
+    public void givenItem_whenChangeAvailability_shouldUpdateStatus() {
+        ShoppingCartItem item = ShoppingCartItemTestDataBuilder.aShoppingCartItem()
+                .available(true)
+                .build();
+
+        Product product = ProductTestDataBuilder.aProduct()
+                .inStock(false)
+                .build();
+        //no metodo refresh ira chamar a atualizaçao do status do produto,ira
+        //atualizar no ShoppingCartItem tambem.
+        item.refresh(product);
+
+        Assertions.assertThat(item.isAvailable()).isFalse();
+    }
+
+    @Test
+    public void givenEqualIds_whenCompareItems_shouldBeEqual() {
+        ShoppingCartId cartId = new ShoppingCartId();
+        ProductId productId = new ProductId();
+        ShoppingCartItemId shoppingCartItemId = new ShoppingCartItemId();
+
+        ShoppingCartItem item1 = ShoppingCartItem.existing()
+                .id(shoppingCartItemId)
+                .shoppingCartId(cartId)
+                .productId(productId)
+                .productName(new ProductName("Mouse"))
+                .price(new Money("100"))
+                .quantity(new Quantity(1))
+                .available(true)
+                .totalAmount(new Money("100"))
+                .build();
+
+        ShoppingCartItem item2 = ShoppingCartItem.existing()
+                .id(shoppingCartItemId)
+                .shoppingCartId(cartId)
+                .productId(productId)
+                .productName(new ProductName("Notebook"))
+                .price(new Money("100"))
+                .quantity(new Quantity(1))
+                .available(true)
+                .totalAmount(new Money("100"))
+                .build();
+        //Verifica pelo id de shoppingCartItem que as duas instancias sao iguais,apesar
+        //de carregarem produtos diferentes.
+        Assertions.assertThat(item1).isEqualTo(item2);
+        Assertions.assertThat(item1.hashCode()).isEqualTo(item2.hashCode());
+    }
+
+    @Test
+    public void givenDifferentIds_whenCompareItems_shouldNotBeEqual() {
+        ShoppingCartItem item1 = ShoppingCartItemTestDataBuilder.aShoppingCartItem().build();
+        ShoppingCartItem item2 = ShoppingCartItemTestDataBuilder.aShoppingCartItem().build();
+        //Verifica que pela factory brandnew de ShoppingItemCart chama um item com ids diferentes,porque
+        //chama IdGenerator.generateTimeBasedUUID();
+        Assertions.assertThat(item1).isNotEqualTo(item2);
+    }
+
+}
