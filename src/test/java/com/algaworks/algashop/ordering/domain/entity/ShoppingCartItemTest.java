@@ -72,7 +72,7 @@ class ShoppingCartItemTest {
                 .build();
 
         Product product = ProductTestDataBuilder.aProduct().build();
-        Product product2 = ProductTestDataBuilder.aProduct().build();
+        Product product2 = ProductTestDataBuilder.aProductAlternative().build();
 
         item.refresh(product);
 

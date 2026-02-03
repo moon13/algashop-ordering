@@ -9,6 +9,7 @@ import com.algaworks.algashop.ordering.domain.valueobject.id.ProductId;
 public class ProductTestDataBuilder {
 
     public static final ProductId DEFAULT_PRODUCT_ID = new ProductId();
+    public static final ProductId ALTERNATIVE_PRODUCT_ID = new ProductId();
 
     private ProductTestDataBuilder() {
     }
@@ -43,6 +44,15 @@ public class ProductTestDataBuilder {
                 .name(new ProductName("Mouse Pad"))
                 .price(new Money("100"))
                 .inStock(true);
+    }
+
+
+    public static Product.ProductBuilder aProductAlternative() {
+        return Product.builder()
+                .id(ALTERNATIVE_PRODUCT_ID)
+                .inStock(true)
+                .name(new ProductName("Monitor X22"))
+                .price(new Money("1500"));
     }
 
 }
