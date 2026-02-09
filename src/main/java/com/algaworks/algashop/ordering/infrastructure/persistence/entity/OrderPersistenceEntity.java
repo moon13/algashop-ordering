@@ -24,7 +24,7 @@ public class OrderPersistenceEntity {
      @EqualsAndHashCode.Include
      private Long id;//TSID
      private UUID customerId;
-     private BigDecimal TotalAmount;
+     private BigDecimal totalAmount;
      private Integer totalItems;
      private String status;
      private String paymentMethod;
