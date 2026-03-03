@@ -7,6 +7,7 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.Orde
 import com.algaworks.algashop.ordering.infrastructure.persistence.disassembler.OrderPersistenceEntityDisassembler;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.OrderPersistenceEntity;
 import com.algaworks.algashop.ordering.infrastructure.persistence.repository.OrderPersistenceEntityRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ public class OrdersPersistenceProvider implements Orders {
     private final OrderPersistenceEntityAssembler assembler;
     private final OrderPersistenceEntityDisassembler disassembler;
 
+    private final EntityManager entityManager;
 
     @Override
     public Optional<Order> ofId(OrderId orderId) {
@@ -35,8 +37,32 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public void add(Order aggregrateRoot) {
+        long orderId = aggregrateRoot.id().value().toLong();
+
+        persistenceRepository.findById(orderId).
+                ifPresentOrElse(
+                        (orderPersistenceEntity) -> {
+                          update(aggregrateRoot,orderPersistenceEntity);
+                        },
+                        () ->{
+                            insert(aggregrateRoot);
+                        }
+
+                );
+    }
+
+    private void update(Order aggregrateRoot, OrderPersistenceEntity persistenceEntity) {
+        persistenceEntity = assembler.merge(persistenceEntity,aggregrateRoot);
+        entityManager.detach(persistenceEntity);
+        persistenceEntity = persistenceRepository.saveAndFlush(persistenceEntity);
+        aggregrateRoot.setVersion(persistenceEntity.getVersion());
+    }
+
+    public void insert(Order aggregrateRoot) {
+
         OrderPersistenceEntity orderPersistenceEntity = assembler.fromDomain(aggregrateRoot);
         persistenceRepository.saveAndFlush(orderPersistenceEntity);
+        aggregrateRoot.setVersion(orderPersistenceEntity.getVersion());
     }
 
     @Override
