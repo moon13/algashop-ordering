@@ -254,14 +254,14 @@ public class Order  implements AggregateRoot<OrderId>{
         return this.status.equals(OrderStatus.CANCELED);
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Long version() {
         return this.version;
     }
 
+    private void setVersion(Long version) {
+        this.version = version;
+    }
 
 
     private void verifyIfChangeable() {
