@@ -48,6 +48,7 @@ public class OrderPersistenceEntityAssembler {
                 .document(billing.document().value())
                 .phone(billing.phone().value())
                 .address(toAddressEmbeddable(billing.address()))
+                .email(billing.email().value())
                 .build();
     }
 
