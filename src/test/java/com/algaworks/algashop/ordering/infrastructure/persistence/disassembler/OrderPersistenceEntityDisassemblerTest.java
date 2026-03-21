@@ -30,7 +30,8 @@ class OrderPersistenceEntityDisassemblerTest {
                 s ->  Assertions.assertThat(s.canceledAt()).isEqualTo(persistenceEntity.getCanceledAt()),
                 s ->  Assertions.assertThat(s.readyAt()).isEqualTo(persistenceEntity.getReadyAt()),
                 s ->  Assertions.assertThat(s.status()).isEqualTo(OrderStatus.valueOf(persistenceEntity.getStatus())),
-                s ->  Assertions.assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod()))
+                s ->  Assertions.assertThat(s.paymentMethod()).isEqualTo(PaymentMethod.valueOf(persistenceEntity.getPaymentMethod())),
+                s ->  Assertions.assertThat(s.items().size()).isEqualTo(persistenceEntity.getItems().size())
         );
     }
 }
