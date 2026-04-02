@@ -18,9 +18,9 @@ public class CustomerTest {
                .document(new Document("255-08-0578"))
                 .phone(new Phone("478-256-2504"))
                 .email(new Email("john.doe@gmail.com"))
-                .fullNAme(new FullName("John","Doe"))
-                .birthdate(new Birthdate(LocalDate.of(1991, 7, 5)))
-                .promotionNotificationAllowed(true)
+                .fullName(new FullName("John","Doe"))
+                .birthDate(new Birthdate(LocalDate.of(1991, 7, 5)))
+                .promotionNotificationsAllowed(true)
                 //OffsetDateTime.now(),
                 .address(Address.builder()
                         .street("Borboun street")

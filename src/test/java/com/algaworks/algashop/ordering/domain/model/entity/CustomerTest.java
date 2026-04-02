@@ -40,12 +40,12 @@ class CustomerTest {
          customer.archive();
 
          Assertions.assertWith(customer,
-                 c->Assertions.assertThat(c.fullNAme()).isEqualTo(new FullName("Anonymous","Anonymous")),
+                 c->Assertions.assertThat(c.fullName()).isEqualTo(new FullName("Anonymous","Anonymous")),
                  c->Assertions.assertThat(c.email()).isNotEqualTo(new Email("john.doe@gmail.com")),
                  c->Assertions.assertThat(c.phone()).isEqualTo(new Phone("000-000-0000")),
                  c->Assertions.assertThat(c.document()).isEqualTo(new Document("000-00-0000")),
-                 c->Assertions.assertThat(c.birthdate()).isNull(),
-                 c->Assertions.assertThat(c.isPromotionNotificationAllowed()).isFalse(),
+                 c->Assertions.assertThat(c.birthDate()).isNull(),
+                 c->Assertions.assertThat(c.isPromotionNotificationsAllowed()).isFalse(),
                  c->Assertions.assertThat(c.address()).isEqualTo(
                          Address.builder()
                                  .street("Borboun street")
@@ -97,7 +97,7 @@ class CustomerTest {
         customer.addLoyaltyPoints(new LoyaltyPoints(10));
         customer.addLoyaltyPoints(new LoyaltyPoints(20));
 
-        Assertions.assertThat(customer.loyaltyPointd()).isEqualTo(new LoyaltyPoints(30));
+        Assertions.assertThat(customer.loyaltyPoints()).isEqualTo(new LoyaltyPoints(30));
     }
 
     @Test
