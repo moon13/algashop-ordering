@@ -4,6 +4,9 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.entity.Custome
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
+import java.util.Optional;
 
 public interface CustomerPersistenceEntityRepository extends JpaRepository<CustomerPersistenceEntity, UUID> {
+
+      Optional<CustomerPersistenceEntity> findByEmail(String value);
 }
