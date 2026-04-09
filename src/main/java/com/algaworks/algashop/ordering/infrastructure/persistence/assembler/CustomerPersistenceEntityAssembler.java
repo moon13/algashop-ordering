@@ -21,6 +21,7 @@ public class CustomerPersistenceEntityAssembler {
         customerPersistenceEntity.setBirthDate(customer.birthDate() != null ? customer.birthDate().value() : null);
         customerPersistenceEntity.setEmail(customer.email().value());
         customerPersistenceEntity.setPhone(customer.phone().value());
+    //ERRO AQUI
         customerPersistenceEntity.setDocument(customer.document().value());
         customerPersistenceEntity.setPromotionNotificationsAllowed(customer.isPromotionNotificationsAllowed());
         customerPersistenceEntity.setArchived(customer.isArchived());

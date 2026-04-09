@@ -148,7 +148,7 @@ public class Customer implements AggregateRoot<CustomerId>{
     }
 
     private Customer(CustomerId id,  Long version, FullName fullName, Birthdate birthDate, Email email,
-                     Phone phone, Document document, Boolean promotionNotificationAllowed,
+                     Phone phone, Document document, Boolean promotionNotificationsAllowed,
                      Boolean archived, OffsetDateTime registeredAt, OffsetDateTime archivedAt,
                      LoyaltyPoints loyaltyPoints,
                      Address address) {
