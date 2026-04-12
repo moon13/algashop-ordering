@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.infrastructure.persistence.provider;
 
 import com.algaworks.algashop.ordering.domain.model.entity.Order;
 import com.algaworks.algashop.ordering.domain.model.repository.Orders;
+import com.algaworks.algashop.ordering.domain.model.valueobject.Money;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.valueobject.id.OrderId;
 import com.algaworks.algashop.ordering.infrastructure.persistence.assembler.OrderPersistenceEntityAssembler;
@@ -11,7 +12,6 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.repository.Ord
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.aspectj.weaver.reflect.ReflectionShadow;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -79,13 +79,22 @@ public class OrdersPersistenceProvider implements Orders {
 
     @Override
     public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
-        OffsetDateTime start = year.atDay(1).atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = start.plusYears(1).minusNanos(1);
+
 
         List<OrderPersistenceEntity> entities = persistenceRepository
-                .findByCustomer_IdAndPlacedAtBetween(customerId.value(),start,end);
+                .placedByCustomerInYear(customerId.value(),year.getValue());
 
         return entities.stream().map(e->disassembler.toDomainEntity(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
+        return 0;
+    }
+
+    @Override
+    public Money totalSoldForCustomer(CustomerId customerId) {
+        return null;
     }
 
     private void update(Order aggregrateRoot, OrderPersistenceEntity persistenceEntity) {
