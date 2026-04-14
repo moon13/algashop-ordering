@@ -80,21 +80,22 @@ public class OrdersPersistenceProvider implements Orders {
     @Override
     public List<Order> placedByCustomerInYear(CustomerId customerId, Year year) {
 
+        List<OrderPersistenceEntity> entities = persistenceRepository.placedByCustomerInYear(
+                customerId.value(),
+                year.getValue()
+        );
 
-        List<OrderPersistenceEntity> entities = persistenceRepository
-                .placedByCustomerInYear(customerId.value(),year.getValue());
-
-        return entities.stream().map(e->disassembler.toDomainEntity(e)).collect(Collectors.toList());
+        return entities.stream().map(disassembler::toDomainEntity).collect(Collectors.toList());
     }
 
     @Override
     public long salesQuantityByCustomerInYear(CustomerId customerId, Year year) {
-        return 0;
+        return this.persistenceRepository.salesQuantityByCustomerInYear(customerId.value(),year.getValue());
     }
 
     @Override
     public Money totalSoldForCustomer(CustomerId customerId) {
-        return null;
+        return new Money(this.persistenceRepository.totalSoldForCustomer(customerId.value()));
     }
 
     private void update(Order aggregrateRoot, OrderPersistenceEntity persistenceEntity) {
