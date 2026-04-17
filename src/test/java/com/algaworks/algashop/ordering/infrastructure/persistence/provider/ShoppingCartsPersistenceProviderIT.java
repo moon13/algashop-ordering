@@ -61,6 +61,9 @@ class ShoppingCartsPersistenceProviderIT {
         ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart().build();
         assertThat(shoppingCart.version()).isNull();
 
+        System.out.println(shoppingCart.customerId());
+        System.out.println(CustomerTestDataBuilder.DEFAULT_CUSTOMER_ID);
+
         persistenceProvider.add(shoppingCart);
 
         assertThat(shoppingCart.version()).isNotNull().isEqualTo(0L);
