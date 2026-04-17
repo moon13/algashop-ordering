@@ -89,7 +89,7 @@ public class Order  implements AggregateRoot<OrderId>{
 
         this.verifyIfChangeable();
 
-        product.checkOutOFStock();
+        product.checkOutOfStock();
 
         OrderItem orderItem = OrderItem.brandNew().orderId(this.id())
                 .quantity(quantity)

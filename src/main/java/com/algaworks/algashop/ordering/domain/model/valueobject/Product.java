@@ -22,7 +22,7 @@ public record Product(
     }
 
 
-    public void checkOutOFStock(){
+    public void checkOutOfStock(){
         if(isOutOfStock()){
             throw new ProductOutOfStockException(this.id());
         }
