@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//PAREI NO ITEM 4
+
 @Component
 public class ShoppingCartPersistenceEntityDisassembler {
     public ShoppingCart toDomainEntity(ShoppingCartPersistenceEntity source) {
