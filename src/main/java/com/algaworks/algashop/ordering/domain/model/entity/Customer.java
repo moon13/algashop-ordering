@@ -45,9 +45,7 @@ public class Customer implements AggregateRoot<CustomerId>{
             this.birthDate = null;
             return;
         }
-//        if (birthdate.isAfter(LocalDate.now())){
-//            throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
-//        }
+
         this.birthDate = birthDate;
     }
 
@@ -218,6 +216,9 @@ public class Customer implements AggregateRoot<CustomerId>{
     public void addLoyaltyPoints(LoyaltyPoints loyaltyPointsAdded){
         verifyIfChangeable();
 
+         if( loyaltyPointsAdded.equals(LoyaltyPoints.ZERO)){
+             return;
+         }
         this.setLoyaltyPoints(loyaltyPoints.add(loyaltyPointsAdded));
     }
 
