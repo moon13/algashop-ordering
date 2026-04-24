@@ -33,7 +33,7 @@ class CustomerLoyaltyPointsServiceTest {
         Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         Product product = ProductTestDataBuilder.aProductAltRamMemory().build();
 
-        Order order = OrderTestDataBuilder.anOrder().withItems(false).orderStatus(OrderStatus.READY).build();
+        Order order = OrderTestDataBuilder.anOrder().withItems(false).orderStatus(OrderStatus.DRAFT).build();
         order.addItem(product,new Quantity(1));
         order.place();
         order.markAsPaid();
