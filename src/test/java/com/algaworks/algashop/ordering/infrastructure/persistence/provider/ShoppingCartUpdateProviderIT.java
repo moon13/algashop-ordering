@@ -63,7 +63,7 @@ class ShoppingCartUpdateProviderIT {
             );
         }
     }
-        //PAREI NO MIN}UTO 24:28
+
     @Test
     @Transactional(propagation = Propagation.NEVER)
     void shouldUpdateItemPriceAndTotalAmount() {
