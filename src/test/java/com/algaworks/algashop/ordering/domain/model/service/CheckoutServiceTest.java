@@ -90,7 +90,7 @@ class CheckoutServiceTest {
         assertThat(shoppingCart.isEmpty()).isTrue();
     }
 
-    @Test //PAREI AQUI.
+    @Test
     void givenShoppingCartWithUnavailableItems_whenCheckout_shouldNotModifyShoppingCartState() {
         ShoppingCart shoppingCart = ShoppingCart.startShopping(ShoppingCartTestDataBuilder.aShoppingCart().customerId);
         Product productInStock = ProductTestDataBuilder.aProduct().build();
