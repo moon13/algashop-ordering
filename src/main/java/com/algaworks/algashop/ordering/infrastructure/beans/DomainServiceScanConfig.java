@@ -1,4 +1,4 @@
-package com.algaworks.algashop.ordering.infrastructure.persistence.beans;
+package com.algaworks.algashop.ordering.infrastructure.beans;
 
 import com.algaworks.algashop.ordering.domain.model.utility.DomainService;
 import org.springframework.context.annotation.ComponentScan;
