@@ -1,5 +1,5 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.entity;
-import com.algaworks.algashop.ordering.domain.model.utility.IdGenerator;
+import com.algaworks.algashop.ordering.domain.model.IdGenerator;
 import com.algaworks.algashop.ordering.infrastructure.persistence.entity.ShoppingCartPersistenceEntity.ShoppingCartPersistenceEntityBuilder;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
