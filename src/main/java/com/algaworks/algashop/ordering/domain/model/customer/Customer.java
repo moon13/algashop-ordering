@@ -229,6 +229,7 @@ public class Customer implements AggregateRoot<CustomerId> {
 
             verifyIfChangeable();
             this.setArchived(true);
+            this.setArchivedAt(OffsetDateTime.now());
          this.setFullName(new FullName("Anonymous","Anonymous"));
          this.setPhone(new Phone("000-000-0000"));
          this.setDocument(new Document("000-00-0000"));
