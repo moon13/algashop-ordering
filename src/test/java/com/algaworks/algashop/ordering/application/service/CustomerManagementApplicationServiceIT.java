@@ -6,6 +6,7 @@ import com.algaworks.algashop.ordering.application.model.CustomerInput;
 import com.algaworks.algashop.ordering.application.model.CustomerOutput;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -14,6 +15,8 @@ import java.util.UUID;
 @SpringBootTest
 class CustomerManagementApplicationServiceIT {
 
+
+    @Autowired
      private CustomerManagementApplicationService customerManagementApplicationService;
 
     @Test
