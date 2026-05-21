@@ -1,12 +1,12 @@
-package com.algaworks.algashop.ordering.application.service;
+package com.algaworks.algashop.ordering.application.customer.management;
 
 
-import com.algaworks.algashop.ordering.application.model.AddressData;
-import com.algaworks.algashop.ordering.application.model.CustomerInput;
-import com.algaworks.algashop.ordering.application.model.CustomerOutput;
+import com.algaworks.algashop.ordering.application.commons.AddressData;
+import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +19,8 @@ public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService customerRegistration;
     private final Customers customers;
+    private final Mapper mapper;
+
 
     @Transactional
     public UUID create(CustomerInput input) {
@@ -54,6 +56,7 @@ public class CustomerManagementApplicationService {
         Customer customer = customers.ofId(new CustomerId(customerId))
                 .orElseThrow(() -> new CustomerNotFoundException());
 
+        /*
         return CustomerOutput.builder()
                 .id(customer.id().value())
                 .firstName(customer.fullName().firstName())
@@ -76,7 +79,9 @@ public class CustomerManagementApplicationService {
                         .state(customer.address().state())
                         .zipCode(customer.address().zipCode().value())
                         .build())
-                .build();
+                .build();*/
+
+         return mapper.convert(customer, CustomerOutput.class);
     }
 
 }
