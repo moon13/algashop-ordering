@@ -56,32 +56,40 @@ public class CustomerManagementApplicationService {
         Customer customer = customers.ofId(new CustomerId(customerId))
                 .orElseThrow(() -> new CustomerNotFoundException());
 
-        /*
-        return CustomerOutput.builder()
-                .id(customer.id().value())
-                .firstName(customer.fullName().firstName())
-                .lastName(customer.fullName().lastName())
-                .email(customer.email().value())
-                .document(customer.document().value())
-                .phone(customer.phone().value())
-                .promotionNotificationsAllowed(customer.isPromotionNotificationsAllowed())
-                .loyaltyPoints(customer.loyaltyPoints().value())
-                .registeredAt(customer.registeredAt())
-                .archived(customer.isArchived())
-                .archivedAt(customer.archivedAt() != null ? customer.archivedAt() : null)
-                .birthDate(customer.birthDate() != null ? customer.birthDate().value() : null)
-                .address(AddressData.builder()
-                        .street(customer.address().street())
-                        .number(customer.address().number())
-                        .complement(customer.address().complement())
-                        .neighborhood(customer.address().neightborhood())
-                        .city(customer.address().city())
-                        .state(customer.address().state())
-                        .zipCode(customer.address().zipCode().value())
-                        .build())
-                .build();*/
-
          return mapper.convert(customer, CustomerOutput.class);
+    }
+
+    @Transactional
+    public void update(UUID rawCustomerId, CustomerUpdateInput input) {
+            Objects.requireNonNull(input);
+            Objects.requireNonNull(rawCustomerId);
+
+             Customer customer = customers.ofId(new CustomerId(rawCustomerId)).orElseThrow(
+                     () -> new CustomerNotFoundException()
+             );
+
+             customer.changeName( new FullName(input.getFirstName(), input.getLastName()) );
+             customer.changePhone( new Phone(input.getPhone()));
+
+             if(Boolean.TRUE.equals(input.getPromotionNotificationsAllowed())) {
+                 customer.enablePromotionNotifications();
+             }else{
+                  customer.disablePromotionNotifications();
+             }
+
+            AddressData address = input.getAddress();
+
+             customer.changeAddress( Address.builder()
+                    .zipCode(new ZipCode(address.getZipCode()))
+                    .state(address.getState())
+                    .city(address.getCity())
+                    .neightborhood(address.getNeighborhood())
+                    .street(address.getStreet())
+                    .number(address.getNumber())
+                    .complement(address.getComplement())
+                    .build());
+
+             customers.add(customer);
     }
 
 }
