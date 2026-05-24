@@ -5,15 +5,18 @@ import com.algaworks.algashop.ordering.application.customer.management.CustomerM
 import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
+import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @SpringBootTest
+@Transactional
 class CustomerManagementApplicationServiceIT {
 
 
@@ -45,13 +48,39 @@ class CustomerManagementApplicationServiceIT {
 
         );
 
-        //FIQUEI ATE 9:50
+        Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
+    }
 
-       /* Assertions.assertThat(customerOutput.getId()).isEqualTo(customerId);
-        Assertions.assertThat(customerOutput.getFirstName()).isEqualTo("John");
-        Assertions.assertThat(customerOutput.getLastName()).isEqualTo("Doe");
-        Assertions.assertThat(customerOutput.getEmail()).isEqualTo("johndoe@email.com");
-        Assertions.assertThat(customerOutput.getBirthDate()).isEqualTo(LocalDate.of(1991, 7,5));*/
+
+    @Test
+    public void shouldUpdate() {
+        CustomerInput input =CustomerInputTestDataBuilder.aCustomer().build();
+        CustomerUpdateInput updateInput = CustomerUpdateInputTestDataBuilder.aCustomerUpdate().build();
+
+        UUID customerId = customerManagementApplicationService.create(input);
+        Assertions.assertThat(customerId).isNotNull();
+
+
+        customerManagementApplicationService.update(customerId, updateInput);
+
+        CustomerOutput customerOutput = customerManagementApplicationService.findById(customerId);
+
+        Assertions.assertThat( customerOutput).extracting(
+                CustomerOutput::getId,
+                CustomerOutput::getFirstName,
+                CustomerOutput::getLastName,
+                CustomerOutput::getEmail,
+                CustomerOutput::getBirthDate
+        ).containsExactly(
+                customerId,
+                "Matt",
+                "Damon",
+                "johndoe@email.com",
+                LocalDate.of(1991, 7,5)
+
+
+        );
+
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
     }
 }
