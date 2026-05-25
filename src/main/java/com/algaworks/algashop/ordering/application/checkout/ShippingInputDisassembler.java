@@ -22,7 +22,7 @@ class ShippingInputDisassembler {
                                 shippingInput.getRecipient().getLastName()))
                         .document(new Document(shippingInput.getRecipient().getDocument()))
                         .phone(new Phone(shippingInput.getRecipient().getPhone()))
-                        .build())s
+                        .build())
                 .address(Address.builder()
                         .street(address.getStreet())
                         .number(address.getNumber())
