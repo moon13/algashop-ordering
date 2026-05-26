@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -90,6 +91,15 @@ public class CustomerManagementApplicationService {
                     .build());
 
              customers.add(customer);
+    }
+
+    @Transactional
+    public void archive(UUID rawCustomerId) {
+        CustomerId customerId = new CustomerId(rawCustomerId);
+        Customer customer = customers.ofId(new CustomerId(rawCustomerId))
+                .orElseThrow(()-> new CustomerNotFoundException());
+        customer.archive();
+        customers.add(customer);
     }
 
 }
