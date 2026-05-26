@@ -32,7 +32,7 @@ public class BuyNowApplicationService {
     private final BillingInputDisassembler billingInputDisassembler;
     private final ShippingInputDisassembler shippingInputDisassembler;
 
-        //PAREI EM 14:07
+
     @Transactional
     public String buyNow(BuyNowInput input) {
 
@@ -52,6 +52,8 @@ public class BuyNowApplicationService {
         Order order = buyNowService.buyNow(
                 product, customerId, billing, shipping, quantity,paymentMethod
         );
+
+        orders.add(order);
 
         return order.id().toString();
 
