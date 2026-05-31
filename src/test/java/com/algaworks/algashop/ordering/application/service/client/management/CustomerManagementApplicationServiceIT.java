@@ -228,9 +228,9 @@ class CustomerManagementApplicationServiceIT {
          CustomerInput inputWithExistingEmail = CustomerInputTestDataBuilder.aCustomer()
                  .email("newEmail@email.com").build();
 
-         final UUID customerIdWithExistingEmail;
-         Assertions.assertThatExceptionOfType(CustomerEmailIsInUseException.class)
-                 .isThrownBy(() ->  customerManagementApplicationService.create(inputWithExistingEmail));
+         final UUID customerIdWithExistingEmail = UUID.randomUUID();
+         Assertions.assertThatExceptionOfType(CustomerNotFoundException.class)
+                .isThrownBy(() ->  customerManagementApplicationService.changeEmail(customerIdWithExistingEmail,"newEmail@email.com"));
 
 
      }
