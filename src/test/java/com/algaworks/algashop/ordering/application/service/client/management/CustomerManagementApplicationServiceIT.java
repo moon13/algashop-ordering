@@ -211,28 +211,25 @@ class CustomerManagementApplicationServiceIT {
 
      }
 
-     @Test
-    public void shouldThrowExceptionWhenUsingNotUniqueEmail(){
-         CustomerInput input = CustomerInputTestDataBuilder.aCustomer()
-                 .email("validemail@email.com").build();
-         UUID customerId = customerManagementApplicationService.create(input);
-         Assertions.assertThat(customerId).isNotNull();
-         Assertions.assertThat(input.getEmail()).isNotNull();
+    @Test
+    public void shouldThrowExceptionWhenChangeEmailUsingNotUniqueEmail(){
+        CustomerInput input1 = CustomerInputTestDataBuilder.aCustomer()
+                .firstName("John").lastName("Doe")
+                .email("john@email.com").build();
+        UUID customerId1 = customerManagementApplicationService.create(input1);
+        Assertions.assertThat(customerId1).isNotNull();
+        Assertions.assertThat(input1.getEmail()).isNotNull();
 
-         CustomerOutput savedCustomer = customerManagementApplicationService.findById(customerId);
-         Assertions.assertThat(savedCustomer).isNotNull();
-         Assertions.assertThat(savedCustomer.getEmail()).isNotNull();
+        CustomerInput input2 = CustomerInputTestDataBuilder.aCustomer()
+                .firstName("Jane").lastName("Smith")
+                .email("jane@email.com").build();
 
-         customerManagementApplicationService.changeEmail(customerId, "newEmail@email.com");
+        UUID customerId2 = customerManagementApplicationService.create(input2);
+        Assertions.assertThat(customerId2).isNotNull();
+        Assertions.assertThat(input2.getEmail()).isNotNull();
 
-         CustomerInput inputWithExistingEmail = CustomerInputTestDataBuilder.aCustomer()
-                 .email("newEmail@email.com").build();
-
-         final UUID customerIdWithExistingEmail = UUID.randomUUID();
-         Assertions.assertThatExceptionOfType(CustomerNotFoundException.class)
-                .isThrownBy(() ->  customerManagementApplicationService.changeEmail(customerIdWithExistingEmail,"newEmail@email.com"));
-
-
-     }
+        Assertions.assertThatExceptionOfType(CustomerEmailIsInUseException.class)
+                .isThrownBy(() ->  customerManagementApplicationService.changeEmail(customerId2,"john@email.com"));
+    }
 
 }

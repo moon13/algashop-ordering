@@ -66,7 +66,7 @@ class ShoppingCartManagementApplicationServiceIT {
                 .isThrownBy(() -> service.createNew(customer.id().value()));
     }
 
-     //PAREI AQUI.
+
     @Test
     void shouldAddItemToShoppingCartSuccessfully() {
         Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
