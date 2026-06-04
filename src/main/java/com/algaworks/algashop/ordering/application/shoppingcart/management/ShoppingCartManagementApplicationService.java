@@ -61,7 +61,7 @@ public class ShoppingCartManagementApplicationService {
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId)).
                 orElseThrow(() -> new ShoppingCartNotFoundException());
-        shoppingCarts.remove(shoppingCart);
+        shoppingCart.removeItem(new ShoppingCartItemId(rawShoppingCartItemId));
         shoppingCarts.add(shoppingCart);
 
     }
