@@ -6,13 +6,14 @@ import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerArchivedException;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
-import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.customer.*;
+import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -25,6 +26,9 @@ class CustomerManagementApplicationServiceIT {
 
     @Autowired
      private CustomerManagementApplicationService customerManagementApplicationService;
+
+    @MockitoSpyBean
+    private CustomerEventListener customerEventListener;
 
     @Test
     public void shouldRegister() {
@@ -52,6 +56,15 @@ class CustomerManagementApplicationServiceIT {
         );
 
         Assertions.assertThat(customerOutput.getRegisteredAt()).isNotNull();
+
+        Mockito.verify(customerEventListener)
+                .listen(Mockito.any(CustomerRegisteredEvent.class));
+
+        Mockito.verify(customerEventListener)
+                .listenSecondary(Mockito.any(CustomerRegisteredEvent.class));
+
+        Mockito.verify(customerEventListener, Mockito.never())
+                .listen(Mockito.any(CustomerArchivedEvent.class));
     }
 
 
