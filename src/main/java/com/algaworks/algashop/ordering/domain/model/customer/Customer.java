@@ -246,6 +246,9 @@ public class Customer
          this.setPromotionNotificationsAllowed(false);
          this.setAddress(this.address().toBuilder()
                  .number("Anonymized").complement(null).build());
+
+          this.publishDomainEvent(new CustomerArchivedEvent(this.id,this.archivedAt));
+
         }
 
 
