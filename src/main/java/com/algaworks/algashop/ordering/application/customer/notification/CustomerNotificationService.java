@@ -4,6 +4,10 @@ import java.util.UUID;
 
 public interface CustomerNotificationService {
 
-     void notifyNewRegistration(UUID customerId);
+     void notifyNewRegistration(NotifyNewRegistrationInput input);
+
+
+     public record NotifyNewRegistrationInput(UUID customerId, String firstName, String email) {}
+
 
 }
