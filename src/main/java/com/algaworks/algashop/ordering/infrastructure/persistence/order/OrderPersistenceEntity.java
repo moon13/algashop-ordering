@@ -6,10 +6,12 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -19,22 +21,24 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @ToString(of = "id")
-@Table(name="\"order\"")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "\"order\"")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
-public class OrderPersistenceEntity {
-
+public class OrderPersistenceEntity
+        extends AbstractAggregateRoot<OrderPersistenceEntity> {
      @Id
      @EqualsAndHashCode.Include
-     private Long id;//TSID
+     private Long id;
 
      @JoinColumn
      @ManyToOne(optional = false)
      private CustomerPersistenceEntity customer;
+
      private BigDecimal totalAmount;
      private Integer totalItems;
      private String status;
      private String paymentMethod;
+
      private OffsetDateTime placedAt;
      private OffsetDateTime paidAt;
      private OffsetDateTime canceledAt;
@@ -42,32 +46,31 @@ public class OrderPersistenceEntity {
 
      @CreatedBy
      private UUID createdByUserId;
+
      @LastModifiedDate
      private OffsetDateTime lastModifiedAt;
+
      @LastModifiedBy
      private UUID lastModifiedByUserId;
+
      @Version
      private Long version;
 
      @Embedded
-     @AttributeOverrides(
-             {
-                     @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name")),
-                     @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name")),
-                     @AttributeOverride(name = "document", column = @Column(name = "billing_document")),
-                     @AttributeOverride(name = "phone", column = @Column(name = "billing_phone")),
-                     @AttributeOverride(name = "address.street", column = @Column(name = "billing_address_street")),
-                     @AttributeOverride(name = "address.number", column = @Column(name = "billing_address_number")),
-                     @AttributeOverride(name = "address.complement", column = @Column(name = "billing_address_complement")),
-                     @AttributeOverride(name = "address.neighborhood", column = @Column(name = "billing_address_neighborhood")),
-                     @AttributeOverride(name = "address.city", column = @Column(name = "billing_address_city")),
-                     @AttributeOverride(name = "address.state", column = @Column(name = "billing_address_state")),
-                     @AttributeOverride(name = "address.zipCode", column = @Column(name = "billing_address_zipCode"))
-
-             }
-     )
+     @AttributeOverrides({
+             @AttributeOverride(name = "firstName", column = @Column(name = "billing_first_name")),
+             @AttributeOverride(name = "lastName", column = @Column(name = "billing_last_name")),
+             @AttributeOverride(name = "document", column = @Column(name = "billing_document")),
+             @AttributeOverride(name = "phone", column = @Column(name = "billing_phone")),
+             @AttributeOverride(name = "address.street", column = @Column(name = "billing_address_street")),
+             @AttributeOverride(name = "address.number", column = @Column(name = "billing_address_number")),
+             @AttributeOverride(name = "address.complement", column = @Column(name = "billing_address_complement")),
+             @AttributeOverride(name = "address.neighborhood", column = @Column(name = "billing_address_neighborhood")),
+             @AttributeOverride(name = "address.city", column = @Column(name = "billing_address_city")),
+             @AttributeOverride(name = "address.state", column = @Column(name = "billing_address_state")),
+             @AttributeOverride(name = "address.zipCode", column = @Column(name = "billing_address_zipCode"))
+     })
      private BillingEmbeddable billing;
-
 
      @Embedded
      @AttributeOverrides({
@@ -87,7 +90,7 @@ public class OrderPersistenceEntity {
      })
      private ShippingEmbeddable shipping;
 
-     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
      private Set<OrderItemPersistenceEntity> items = new HashSet<>();
 
      @Builder
@@ -112,38 +115,45 @@ public class OrderPersistenceEntity {
      }
 
      public void replaceItems(Set<OrderItemPersistenceEntity> items) {
-          if (items == null ||  items.isEmpty()) {
+          if (items == null || items.isEmpty()) {
                this.setItems(new HashSet<>());
                return;
           }
 
           items.forEach(i -> i.setOrder(this));
           this.setItems(items);
-
-
      }
 
      public void addItem(OrderItemPersistenceEntity item) {
           if (item == null) {
                return;
-
           }
 
-          if(this.getItems() == null){
+          if (this.getItems() == null) {
                this.setItems(new HashSet<>());
           }
 
           item.setOrder(this);
           this.getItems().add(item);
-
      }
 
      public UUID getCustomerId() {
-
-          if(this.customer == null){
+          if (this.customer == null) {
                return null;
           }
-
           return this.customer.getId();
      }
+
+     public Collection<Object> getEvents() {
+          return super.domainEvents();
+     }
+
+     public void addEvents(Collection<Object> events) {
+          if (events != null) {
+               for (Object event : events) {
+                    this.registerEvent(event);
+               }
+          }
+     }
+
 }

@@ -20,71 +20,71 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderPersistenceEntityAssembler {
 
-     private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
-      public OrderPersistenceEntity fromDomain(Order order){
-          return merge(new OrderPersistenceEntity(),order);
+    private final CustomerPersistenceEntityRepository customerPersistenceEntityRepository;
 
-      }
+    public OrderPersistenceEntity fromDomain(Order order) {
+        return merge(new OrderPersistenceEntity(), order);
+    }
 
+    public OrderPersistenceEntity merge(OrderPersistenceEntity orderPersistenceEntity, Order order) {
+        orderPersistenceEntity.setId(order.id().value().toLong());
+        orderPersistenceEntity.setTotalAmount(order.totalAmount().value());
+        orderPersistenceEntity.setTotalItems(order.totalItems().value());
+        orderPersistenceEntity.setStatus(order.status().name());
+        orderPersistenceEntity.setPaymentMethod(order.paymentMethod().name());
+        orderPersistenceEntity.setPlacedAt(order.placedAt());
+        orderPersistenceEntity.setPaidAt(order.paidAt());
+        orderPersistenceEntity.setCanceledAt(order.canceledAt());
+        orderPersistenceEntity.setReadyAt(order.readyAt());
+        orderPersistenceEntity.setVersion(order.version());
+        orderPersistenceEntity.setBilling(toBillingEmbeddable(order.billing()));
+        orderPersistenceEntity.setShipping(toShippingEmbeddable(order.shipping()));
 
-      public OrderPersistenceEntity merge(OrderPersistenceEntity orderPersistenceEntity, Order order){
-          orderPersistenceEntity.setId(order.id().value().toLong());
-          orderPersistenceEntity.setTotalAmount(order.totalAmount().value());
-          orderPersistenceEntity.setTotalItems(order.totalItems().value());
-          orderPersistenceEntity.setStatus(order.status().name());
-          orderPersistenceEntity.setPaymentMethod(order.paymentMethod().name());
-          orderPersistenceEntity.setPlacedAt(order.placedAt());
-          orderPersistenceEntity.setPaidAt(order.paidAt());
-          orderPersistenceEntity.setCanceledAt(order.canceledAt());
-          orderPersistenceEntity.setReadyAt(order.readyAt());
-          orderPersistenceEntity.setVersion(order.version());
-          orderPersistenceEntity.setBilling(toBillingEmbeddable(order.billing()));
-          orderPersistenceEntity.setShipping(toShippingEmbeddable(order.shipping()));
-          Set<OrderItemPersistenceEntity> mergedItems = mergeItems(order,orderPersistenceEntity);
-          orderPersistenceEntity.replaceItems(mergedItems);
+        Set<OrderItemPersistenceEntity> mergedItems = mergeItems(order, orderPersistenceEntity);
+        orderPersistenceEntity.replaceItems(mergedItems);
 
+        var customerPersistenceEntity = customerPersistenceEntityRepository
+                .getReferenceById(order.customerId().value());
+        orderPersistenceEntity.setCustomer(customerPersistenceEntity);
 
-          var customerPersistenceEntity  = customerPersistenceEntityRepository
-                  .getReferenceById(order.customerId().value());
-          orderPersistenceEntity.setCustomer(customerPersistenceEntity);
+        orderPersistenceEntity.addEvents(order.domainEvents());
 
-          return orderPersistenceEntity;
-      }
+        return orderPersistenceEntity;
+    }
 
     private Set<OrderItemPersistenceEntity> mergeItems(Order order, OrderPersistenceEntity orderPersistenceEntity) {
         Set<OrderItem> newOrUpdatedItems = order.items();
 
-        if(newOrUpdatedItems == null || newOrUpdatedItems.isEmpty()) {
+        if (newOrUpdatedItems == null || newOrUpdatedItems.isEmpty()) {
             return new HashSet<>();
         }
 
         Set<OrderItemPersistenceEntity> existingItems = orderPersistenceEntity.getItems();
-        if(existingItems == null || existingItems.isEmpty()) {
+        if (existingItems == null || existingItems.isEmpty()) {
             return newOrUpdatedItems.stream()
                     .map(orderItem -> fromDomain(orderItem))
                     .collect(Collectors.toSet());
         }
 
-        Map<Long, OrderItemPersistenceEntity> existingItemMap = existingItems
-                .stream().collect(Collectors.toMap(OrderItemPersistenceEntity::getId,
-                        item -> item));
+        Map<Long, OrderItemPersistenceEntity> existingItemMap = existingItems.stream()
+                .collect(Collectors.toMap(OrderItemPersistenceEntity::getId, item -> item));
 
         return newOrUpdatedItems.stream()
-                .map( orderItem -> {
-                    OrderItemPersistenceEntity itemPersistence =
-                            existingItemMap.getOrDefault(orderItem.id().value().toLong(),
-                                    new OrderItemPersistenceEntity());
+                .map(orderItem -> {
+                    OrderItemPersistenceEntity itemPersistence = existingItemMap.getOrDefault(
+                            orderItem.id().value().toLong(), new OrderItemPersistenceEntity()
+                    );
                     return merge(itemPersistence, orderItem);
-
-                }).collect(Collectors.toSet());
-
-      }
-
-    public OrderItemPersistenceEntity fromDomain(OrderItem orderItem) {
-          return merge(new OrderItemPersistenceEntity(),orderItem);
+                })
+                .collect(Collectors.toSet());
     }
 
-    private OrderItemPersistenceEntity merge(OrderItemPersistenceEntity orderItemPersistenceEntity, OrderItem orderItem) {
+    public OrderItemPersistenceEntity fromDomain(OrderItem orderItem) {
+        return merge(new OrderItemPersistenceEntity(), orderItem);
+    }
+
+    private OrderItemPersistenceEntity merge(OrderItemPersistenceEntity orderItemPersistenceEntity,
+                                             OrderItem orderItem) {
         orderItemPersistenceEntity.setId(orderItem.id().value().toLong());
         orderItemPersistenceEntity.setProductId(orderItem.productId().value());
         orderItemPersistenceEntity.setProductName(orderItem.productName().value());
@@ -92,8 +92,7 @@ public class OrderPersistenceEntityAssembler {
         orderItemPersistenceEntity.setQuantity(orderItem.quantity().value());
         orderItemPersistenceEntity.setTotalAmount(orderItem.totalAmount().value());
         return orderItemPersistenceEntity;
-
-      }
+    }
 
     private BillingEmbeddable toBillingEmbeddable(Billing billing) {
         if (billing == null) {
@@ -105,7 +104,6 @@ public class OrderPersistenceEntityAssembler {
                 .document(billing.document().value())
                 .phone(billing.phone().value())
                 .address(toAddressEmbeddable(billing.address()))
-                .email(billing.email().value())
                 .build();
     }
 
@@ -145,6 +143,5 @@ public class OrderPersistenceEntityAssembler {
         }
         return builder.build();
     }
-
 
 }
