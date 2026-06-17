@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.customer;
 
 import com.algaworks.algashop.ordering.domain.model.commons.*;
-import com.algaworks.algashop.ordering.domain.model.customer.Birthdate;
+import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
 import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
@@ -15,7 +15,7 @@ public class CustomerPersistenceEntityDisassembler {
         return Customer.existing()
                 .id(new CustomerId(entity.getId()))
                 .fullName(new FullName(entity.getFirstName(), entity.getLastName()))
-                .birthDate(entity.getBirthDate() != null ? new Birthdate(entity.getBirthDate()) : null)
+                .birthDate(entity.getBirthDate() != null ? new BirthDate(entity.getBirthDate()) : null)
                 .email(new Email(entity.getEmail()))
                 .phone(new Phone(entity.getPhone()))
                 .document(new Document(entity.getDocument()))

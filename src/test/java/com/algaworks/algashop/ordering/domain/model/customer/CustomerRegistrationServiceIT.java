@@ -18,7 +18,7 @@ class CustomerRegistrationServiceIT {
     public void shouldRegister() {
         Customer customer = customerRegistrationService.register(
                 new FullName("John", "Doe"),
-                new Birthdate(LocalDate.of(1991, 7, 5)),
+                new BirthDate(LocalDate.of(1991, 7, 5)),
                 new Email("johndoe@email.com"),
                 new Phone("478-256-2604"),
                 new Document("255-08-0578"),

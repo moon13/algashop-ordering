@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.time.Period;
 
-public record Birthdate(LocalDate value) {
+public record BirthDate(LocalDate value) {
 
 
-    public Birthdate(LocalDate value) {
+    public BirthDate(LocalDate value) {
         Objects.requireNonNull(value);
         if (value.isAfter(LocalDate.now())){
             throw new IllegalArgumentException(ErrorMessages.VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);

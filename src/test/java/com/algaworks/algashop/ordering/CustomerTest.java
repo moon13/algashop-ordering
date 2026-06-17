@@ -1,7 +1,7 @@
 package com.algaworks.algashop.ordering;
 
 import com.algaworks.algashop.ordering.domain.model.commons.*;
-import com.algaworks.algashop.ordering.domain.model.customer.Birthdate;
+import com.algaworks.algashop.ordering.domain.model.customer.BirthDate;
 import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.domain.model.customer.LoyaltyPoints;
 import com.algaworks.algashop.ordering.domain.model.IdGenerator;
@@ -21,7 +21,7 @@ public class CustomerTest {
                 .phone(new Phone("478-256-2504"))
                 .email(new Email("john.doe@gmail.com"))
                 .fullName(new FullName("John","Doe"))
-                .birthDate(new Birthdate(LocalDate.of(1991, 7, 5)))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .promotionNotificationsAllowed(true)
                 //OffsetDateTime.now(),
                 .address(Address.builder()

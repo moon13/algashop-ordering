@@ -12,7 +12,7 @@ public class CustomerRegistrationService {
     private final Customers customers;
 
     public Customer register(
-            FullName fullName, Birthdate birthDate, Email email,
+            FullName fullName, BirthDate birthDate, Email email,
             Phone phone, Document document, Boolean promotionNotificationsAllowed,
             Address address
     ) {

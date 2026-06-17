@@ -6,12 +6,10 @@ import com.algaworks.algashop.ordering.application.utility.Mapper;
 import com.algaworks.algashop.ordering.domain.model.commons.*;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.support.ManagedArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,7 +28,7 @@ public class CustomerManagementApplicationService {
 
         Customer customer = customerRegistration.register(
                 new FullName(input.getFirstName(), input.getLastName()),
-                new Birthdate(input.getBirthDate()),
+                new BirthDate(input.getBirthDate()),
                 new Email(input.getEmail()),
                 new Phone(input.getPhone()),
                 new Document(input.getDocument()),

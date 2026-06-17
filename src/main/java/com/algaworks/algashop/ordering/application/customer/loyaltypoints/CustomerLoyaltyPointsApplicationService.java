@@ -8,20 +8,18 @@ import com.algaworks.algashop.ordering.domain.model.order.Orders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerLoyaltyPointsApplicationService {
 
-    private final Customers customers;
-    private final Orders orders;
     private final CustomerLoyaltyPointsService customerLoyaltyPointsService;
+    private final Orders orders;
+    private final Customers customers;
 
     @Transactional
-    public void addLoyaltyPoints(UUID rawCustomerId, String rawOrderId){
+    public void addLoyaltyPoints(UUID rawCustomerId, String rawOrderId) {
         CustomerId customerId = new CustomerId(rawCustomerId);
         OrderId orderId = new OrderId(rawOrderId);
 
@@ -33,6 +31,5 @@ public class CustomerLoyaltyPointsApplicationService {
         customerLoyaltyPointsService.addPoints(customer, order);
 
         customers.add(customer);
-
     }
 }

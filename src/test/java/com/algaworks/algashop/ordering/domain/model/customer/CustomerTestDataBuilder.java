@@ -19,7 +19,7 @@ public class CustomerTestDataBuilder {
                 .phone(new Phone("478-256-2504"))
                 .email(new Email("john.doe@gmail.com"))
                 .fullName(new FullName("John","Doe"))
-                .birthDate(new Birthdate(LocalDate.of(1991, 7, 5)))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .promotionNotificationsAllowed(false)
                 // OffsetDateTime.now(),
                 .address(Address.builder()
@@ -44,7 +44,7 @@ public class CustomerTestDataBuilder {
                 .phone(new Phone("478-256-2504"))
                 .email(new Email("john.doe@gmail.com"))
                 .fullName(new FullName("John","Doe"))
-                .birthDate(new Birthdate(LocalDate.of(1991, 7, 5)))
+                .birthDate(new BirthDate(LocalDate.of(1991, 7, 5)))
                 .document(new Document("111-111-111"))
                 //.promotionNotificationsAllowed(false)
                 // OffsetDateTime.now(),
