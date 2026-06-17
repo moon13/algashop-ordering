@@ -39,7 +39,7 @@ public class OrderRemoveItemTest {
     void givenDraftOrder_whenTryToRemoveNoExistingItem_shouldGenerateException() {
         Order order = OrderTestDataBuilder.anOrder().build();
 
-        Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemExeception.class)
+        Assertions.assertThatExceptionOfType(OrderDoesNotContainOrderItemException.class)
                 .isThrownBy(()-> order.removeItem(new OrderItemId()));
 
         Assertions.assertWith(order,

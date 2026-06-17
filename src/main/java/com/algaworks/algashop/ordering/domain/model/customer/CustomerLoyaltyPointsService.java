@@ -6,6 +6,7 @@ import com.algaworks.algashop.ordering.domain.model.DomainService;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
 
 import java.util.Objects;
+
 @DomainService
 public class CustomerLoyaltyPointsService {
 
@@ -40,5 +41,4 @@ public class CustomerLoyaltyPointsService {
     private boolean shouldGivePointsByAmount(Money amount) {
         return amount.compareTo(expectedAmountToGivePoints) >= 0;
     }
-
 }
