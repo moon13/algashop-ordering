@@ -2,11 +2,10 @@ package com.algaworks.algashop.ordering.application.service.client.management;
 
 
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
-import com.algaworks.algashop.ordering.application.commons.AddressData;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerInput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerOutput;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
-import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationService;
+import com.algaworks.algashop.ordering.application.customer.notification.CustomerNotificationApplicationService;
 import com.algaworks.algashop.ordering.domain.model.customer.*;
 import com.algaworks.algashop.ordering.infrastructure.listener.customer.CustomerEventListener;
 import org.assertj.core.api.Assertions;
@@ -32,7 +31,7 @@ class CustomerManagementApplicationServiceIT {
     private CustomerEventListener customerEventListener;
 
     @MockitoSpyBean
-    private CustomerNotificationService customerNotificationService;
+    private CustomerNotificationApplicationService customerNotificationApplicationService;
 
     @Test
     public void shouldRegister() {
@@ -67,7 +66,7 @@ class CustomerManagementApplicationServiceIT {
         Mockito.verify(customerEventListener, Mockito.never())
                 .listen(Mockito.any(CustomerArchivedEvent.class));
 
-        Mockito.verify(customerNotificationService).notifyNewRegistration(Mockito.any(CustomerNotificationService.NotifyNewRegistrationInput.class));
+        Mockito.verify(customerNotificationApplicationService).notifyNewRegistration(Mockito.any(CustomerNotificationApplicationService.NotifyNewRegistrationInput.class));
     }
 
 
