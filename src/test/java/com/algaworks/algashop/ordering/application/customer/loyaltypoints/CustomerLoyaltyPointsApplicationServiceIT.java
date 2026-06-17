@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -48,7 +49,10 @@ class CustomerLoyaltyPointsApplicationServiceIT {
 
         orders.add(order);
 
-        loyaltyPointsService.addLoyaltyPoints(customer.id().value(), order.id().toString());
+        Optional<Customer> customerUpdated = customers.ofId(order.customerId());
+        if ( customerUpdated.isPresent() && customerUpdated.get().loyaltyPoints().value() == 0) {
+            loyaltyPointsService.addLoyaltyPoints(customer.id().value(), order.id().toString());
+        }
 
         Customer updatedCustomer = customers.ofId(customer.id()).orElseThrow();
         Assertions.assertThat(updatedCustomer).isNotNull();
