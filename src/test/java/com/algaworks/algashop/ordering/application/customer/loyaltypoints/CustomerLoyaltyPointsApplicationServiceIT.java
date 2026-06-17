@@ -97,7 +97,8 @@ class CustomerLoyaltyPointsApplicationServiceIT {
                 .customerId(customer.id())
                 .orderStatus(OrderStatus.READY)
                 .build();
-        orders.add(order);
+        Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
+                .isThrownBy(() -> orders.add(order));
 
         Assertions.assertThatExceptionOfType(CustomerArchivedException.class)
                 .isThrownBy(() -> loyaltyPointsService.addLoyaltyPoints(customer.id().value(), order.id().toString()));
