@@ -1,4 +1,5 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart;
+
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.algaworks.algashop.ordering.infrastructure.persistence.customer.CustomerPersistenceEntityRepository;
@@ -26,6 +27,7 @@ public class ShoppingCartPersistenceEntityAssembler {
         persistenceEntity.setTotalItems(shoppingCart.totalItems().value());
         persistenceEntity.setCreatedAt(shoppingCart.createdAt());
         persistenceEntity.replaceItems(toOrderItemsEntities(shoppingCart.items()));
+        persistenceEntity.addEvents(shoppingCart.domainEvents());
         return persistenceEntity;
     }
 

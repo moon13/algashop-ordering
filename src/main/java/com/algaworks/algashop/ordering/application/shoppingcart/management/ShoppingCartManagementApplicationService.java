@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,19 +19,14 @@ import java.util.UUID;
 public class ShoppingCartManagementApplicationService {
 
     private final ShoppingCarts shoppingCarts;
-
     private final ProductCatalogService productCatalogService;
-
     private final ShoppingService shoppingService;
 
     @Transactional
-    public void addItem(ShoppingCartItemInput input){
+    public void addItem(ShoppingCartItemInput input) {
         Objects.requireNonNull(input);
-
         ShoppingCartId shoppingCartId = new ShoppingCartId(input.getShoppingCartId());
         ProductId productId = new ProductId(input.getProductId());
-
-
 
         ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
                 .orElseThrow(()-> new ShoppingCartNotFoundException());
@@ -40,14 +34,13 @@ public class ShoppingCartManagementApplicationService {
         Product product = productCatalogService.ofId(productId)
                 .orElseThrow(()-> new ProductNotFoundException());
 
-        shoppingCart.addItem(product,new Quantity(input.getQuantity()));
+        shoppingCart.addItem(product, new Quantity(input.getQuantity()));
+
         shoppingCarts.add(shoppingCart);
-
-
     }
 
     @Transactional
-    public UUID  createNew(UUID rawCustomerId) {
+    public UUID createNew(UUID rawCustomerId) {
         Objects.requireNonNull(rawCustomerId);
         ShoppingCart shoppingCart = shoppingService.startShopping(new CustomerId(rawCustomerId));
         shoppingCarts.add(shoppingCart);
@@ -55,15 +48,14 @@ public class ShoppingCartManagementApplicationService {
     }
 
     @Transactional
-    public void removeItem(UUID rawShoppingCartId, UUID rawShoppingCartItemId){
-         Objects.requireNonNull(rawShoppingCartId);
-         Objects.requireNonNull(rawShoppingCartItemId);
-
-        ShoppingCart shoppingCart = shoppingCarts.ofId(new ShoppingCartId(rawShoppingCartId)).
-                orElseThrow(() -> new ShoppingCartNotFoundException());
+    public void removeItem(UUID rawShoppingCartId, UUID rawShoppingCartItemId) {
+        Objects.requireNonNull(rawShoppingCartId);
+        Objects.requireNonNull(rawShoppingCartItemId);
+        ShoppingCartId shoppingCartId = new ShoppingCartId(rawShoppingCartId);
+        ShoppingCart shoppingCart = shoppingCarts.ofId(shoppingCartId)
+                .orElseThrow(()-> new ShoppingCartNotFoundException());
         shoppingCart.removeItem(new ShoppingCartItemId(rawShoppingCartItemId));
         shoppingCarts.add(shoppingCart);
-
     }
 
     @Transactional
@@ -84,7 +76,5 @@ public class ShoppingCartManagementApplicationService {
                 .orElseThrow(()-> new ShoppingCartNotFoundException());
         shoppingCarts.remove(shoppingCart);
     }
-
-
 
 }

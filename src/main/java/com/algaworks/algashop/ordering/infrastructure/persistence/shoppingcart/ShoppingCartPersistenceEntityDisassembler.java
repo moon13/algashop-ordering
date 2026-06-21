@@ -1,4 +1,5 @@
 package com.algaworks.algashop.ordering.infrastructure.persistence.shoppingcart;
+
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartItem;
 import com.algaworks.algashop.ordering.domain.model.commons.Money;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 @Component
 public class ShoppingCartPersistenceEntityDisassembler {
