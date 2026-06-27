@@ -12,7 +12,6 @@ import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,7 +20,6 @@ import java.time.Year;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.InstanceOfAssertFactories.YEAR_MONTH;
 
 @ExtendWith(MockitoExtension.class)
 class BuyNowServiceTest {
@@ -34,14 +32,14 @@ class BuyNowServiceTest {
 
     @BeforeEach
     void setUp() {
-      var specification =  new CustomerrHasFreeShippingSpecification(
+      var specification =  new CustomerHasFreeShippingSpecification(
         orders,
-        200,
-        2,
-        2000
+        new LoyaltyPoints(100),
+        2L,
+        new LoyaltyPoints(2000)
         );
 
-      new BuyNowService(specification);
+        buyNowService = new BuyNowService(specification);
     }
 
     @Test
