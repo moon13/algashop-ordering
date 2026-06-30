@@ -18,7 +18,7 @@ public class CustomerManagementApplicationService {
 
     private final CustomerRegistrationService customerRegistration;
     private final Customers customers;
-    private final Mapper mapper;
+
 
 
     @Transactional
@@ -47,15 +47,6 @@ public class CustomerManagementApplicationService {
         customers.add(customer);
 
         return customer.id().value();
-    }
-
-    @Transactional(readOnly = true)
-     public CustomerOutput findById(UUID customerId) {
-          Objects.requireNonNull(customerId);
-        Customer customer = customers.ofId(new CustomerId(customerId))
-                .orElseThrow(() -> new CustomerNotFoundException());
-
-         return mapper.convert(customer, CustomerOutput.class);
     }
 
     @Transactional
