@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class CustomerPersistenceEntitiesQueriesImpl
+public class CustomerPersistenceEntityQueriesImpl
         implements CustomerPersistenceEntityQueries {
 
     private final EntityManager entityManager;
