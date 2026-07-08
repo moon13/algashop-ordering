@@ -1,8 +1,6 @@
 package com.algaworks.algashop.ordering.application.order.query;
 
-import com.algaworks.algashop.ordering.application.checkout.RecipientData;
 import com.algaworks.algashop.ordering.application.commons.AddressData;
-import com.algaworks.algashop.ordering.domain.model.commons.Money;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

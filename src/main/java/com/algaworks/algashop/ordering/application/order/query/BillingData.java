@@ -1,7 +1,6 @@
-package com.algaworks.algashop.ordering.application.checkout;
+package com.algaworks.algashop.ordering.application.order.query;
 
 import com.algaworks.algashop.ordering.application.commons.AddressData;
-import com.algaworks.algashop.ordering.domain.model.commons.Phone;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
