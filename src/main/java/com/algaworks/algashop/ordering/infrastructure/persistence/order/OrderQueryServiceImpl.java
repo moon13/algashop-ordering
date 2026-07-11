@@ -56,7 +56,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         Expression<Long> count = builder.count(root);
         Predicate[] predicates = toPredicates(builder, root, filter);
 
-
         criteriaQuery.select(count);
         criteriaQuery.where(predicates);
 
@@ -98,7 +97,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
 
         criteriaQuery.where(predicates);
 
-
         TypedQuery<OrderSummaryOutput> typedQuery = entityManager.createQuery(criteriaQuery);
 
         typedQuery.setFirstResult(filter.getSize() * filter.getPage());
@@ -109,15 +107,45 @@ public class OrderQueryServiceImpl implements OrderQueryService {
         return new PageImpl<>(typedQuery.getResultList(), pageRequest, totalQueryResults);
     }
 
-    private Predicate [] toPredicates(CriteriaBuilder builder, Root<OrderPersistenceEntity> root, OrderFilter filter) {
+    private Predicate[] toPredicates(CriteriaBuilder builder,
+                                     Root<OrderPersistenceEntity> root, OrderFilter filter) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if(filter.getCustomerId() != null) {
-            Path<Object> customerIdPath =  root.get("customer").get("id");
-            UUID expectedCustomerId = filter.getCustomerId();
-            Predicate predicate = builder.equal(customerIdPath, expectedCustomerId);
-            predicates.add(predicate);
+        if (filter.getCustomerId() != null) {
+            predicates.add(builder.equal(root.get("customer").get("id"), filter.getCustomerId()));
         }
+
+        if (filter.getStatus() != null && !filter.getStatus().isBlank()) {
+            predicates.add(builder.equal(root.get("status"), filter. getStatus().toUpperCase()));
+        }
+
+        if (filter.getOrderId() != null) {
+            long orderIdLongValue;
+            try {
+                OrderId orderId = new OrderId(filter.getOrderId());
+                orderIdLongValue = orderId.value().toLong();
+            } catch (IllegalArgumentException e) {
+                orderIdLongValue = 0L;
+            }
+            predicates.add(builder.equal(root.get("id"), orderIdLongValue));
+        }
+
+        if (filter.getPlacedAtFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("placedAt"), filter.getPlacedAtFrom()));
+        }
+
+        if (filter.getPlacedAtTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("placedAt"), filter.getPlacedAtTo()));
+        }
+
+        if (filter.getTotalAmountFrom() != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("totalAmount"), filter.getTotalAmountFrom()));
+        }
+
+        if (filter.getTotalAmountTo() != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("totalAmount"), filter.getTotalAmountTo()));
+        }
+
         return predicates.toArray(new Predicate[]{});
     }
 }
