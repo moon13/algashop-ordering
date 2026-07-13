@@ -42,6 +42,8 @@ public class OrderFilter extends SortablePageFilter<OrderFilter.SortType> {
         PAID_AT("paidAt"),
         CANCELED_AT("canceledAt"),
         READY_AT("readyAt"),
+        PAYMENT_METHOD("paymentMethod"),
+        DELIVERED_AT("deliveredAt"),
         STATUS("status");
 
         private final String propertyName;
