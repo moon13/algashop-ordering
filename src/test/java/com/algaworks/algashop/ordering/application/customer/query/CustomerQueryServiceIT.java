@@ -156,19 +156,40 @@ class CustomerQueryServiceIT {
 
 
     @Test
-    public void shouldOrderByFirstNameAndDateRegisteredAt() {
-        OffsetDateTime registeredAt = OffsetDateTime.now();
+    public void shouldOrderByFirstNameAndDateRegisteredAtASC() {
+        OffsetDateTime registeredAt = OffsetDateTime.parse("2026-07-01T10:00:00Z");
+        OffsetDateTime registeredAt2 = OffsetDateTime.parse("2026-07-01T11:00:00Z");
+        OffsetDateTime registeredAt3 = OffsetDateTime.parse("2026-07-01T12:00:00Z");
         customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).registeredAt(registeredAt).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).build());
-        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).registeredAt(registeredAt2).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).registeredAt(registeredAt3).build());
 
         CustomerFilter filter = new CustomerFilter();
-        filter.setSortByProperty(CustomerFilter.SortType.FIRST_NAME);
         filter.setSortByProperty(CustomerFilter.SortType.REGISTERED_AT);
+        filter.setSortDirection(Sort.Direction.ASC);
 
         Page<CustomerSummaryOutput> page = queryService.filter(filter);
 
         Assertions.assertThat(page.getContent().getFirst().getFirstName()).isEqualTo("Zoe");
         Assertions.assertThat(page.getContent().getFirst().getRegisteredAt()).isEqualTo(registeredAt);
+    }
+
+    @Test
+    public void shouldOrderByFirstNameAndDateRegisteredAtDESC() {
+        OffsetDateTime registeredAt = OffsetDateTime.parse("2026-07-01T10:00:00Z");
+        OffsetDateTime registeredAt2 = OffsetDateTime.parse("2026-07-01T11:00:00Z");
+        OffsetDateTime registeredAt3 = OffsetDateTime.parse("2026-07-01T12:00:00Z");
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Zoe", "Doe")).registeredAt(registeredAt).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Charlie", "Smith")).registeredAt(registeredAt2).build());
+        customers.add(CustomerTestDataBuilder.existingCustomer().id(new CustomerId()).fullName(new FullName("Alice", "Williams")).registeredAt(registeredAt3).build());
+
+        CustomerFilter filter = new CustomerFilter();
+        filter.setSortByProperty(CustomerFilter.SortType.REGISTERED_AT);
+        filter.setSortDirection(Sort.Direction.DESC);
+
+        Page<CustomerSummaryOutput> page = queryService.filter(filter);
+
+        Assertions.assertThat(page.getContent().getFirst().getFirstName()).isEqualTo("Alice");
+        Assertions.assertThat(page.getContent().getFirst().getRegisteredAt()).isEqualTo(registeredAt3);
     }
 }
