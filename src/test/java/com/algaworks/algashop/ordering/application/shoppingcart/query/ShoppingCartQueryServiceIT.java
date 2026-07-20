@@ -1,9 +1,11 @@
 package com.algaworks.algashop.ordering.application.shoppingcart.query;
 
 import com.algaworks.algashop.ordering.domain.model.customer.Customer;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ class ShoppingCartQueryServiceIT {
     private Customers customers;
 
     @Test
-    public void shouldFindById() { //DEVE FAZER METODO QUE LANÇA EXCESSAO COM ID INVALIDO;
+    public void shouldFindById() {
         Customer customer = CustomerTestDataBuilder.existingCustomer().build();
         customers.add(customer);
         ShoppingCart shoppingCart = ShoppingCart.startShopping(customer.id());
@@ -36,6 +38,21 @@ class ShoppingCartQueryServiceIT {
                 o -> Assertions.assertThat(o.getId()).isEqualTo(shoppingCart.id().value()),
                 o -> Assertions.assertThat(o.getCustomerId()).isEqualTo(shoppingCart.customerId().value())
         );
+    }
+
+    @Test
+    public void shouldFindByIdException_whenInvalidShoppingCart() {
+
+        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
+        customers.add(customer);
+        CustomerId customerInvalidId = new CustomerId(new CustomerId().value());
+        ShoppingCart shoppingCartInvalid = ShoppingCart.startShopping(customerInvalidId);
+
+
+        Assertions.assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                         .isThrownBy( ()-> shoppingCarts.add(shoppingCartInvalid));
+
+
     }
 
     @Test
