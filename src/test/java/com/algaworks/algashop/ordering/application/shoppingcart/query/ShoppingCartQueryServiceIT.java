@@ -4,14 +4,14 @@ import com.algaworks.algashop.ordering.domain.model.customer.Customer;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerId;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerTestDataBuilder;
 import com.algaworks.algashop.ordering.domain.model.customer.Customers;
-import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCart;
-import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCartNotFoundException;
-import com.algaworks.algashop.ordering.domain.model.shoppingcart.ShoppingCarts;
+import com.algaworks.algashop.ordering.domain.model.shoppingcart.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @SpringBootTest
 @Transactional
@@ -43,14 +43,12 @@ class ShoppingCartQueryServiceIT {
     @Test
     public void shouldFindByIdException_whenInvalidShoppingCart() {
 
-        Customer customer = CustomerTestDataBuilder.existingCustomer().build();
-        customers.add(customer);
-        CustomerId customerInvalidId = new CustomerId(new CustomerId().value());
-        ShoppingCart shoppingCartInvalid = ShoppingCart.startShopping(customerInvalidId);
+        ShoppingCart shoppingCart = ShoppingCartTestDataBuilder.aShoppingCart()
+                .customerId(new CustomerId(UUID.randomUUID())).build();
 
 
         Assertions.assertThatExceptionOfType(ShoppingCartNotFoundException.class)
-                         .isThrownBy( ()-> shoppingCarts.add(shoppingCartInvalid));
+                         .isThrownBy( ()-> queryService.findById(shoppingCart.id().value()));
 
 
     }
@@ -67,6 +65,16 @@ class ShoppingCartQueryServiceIT {
                 o -> Assertions.assertThat(o.getId()).isEqualTo(shoppingCart.id().value()),
                 o -> Assertions.assertThat(o.getCustomerId()).isEqualTo(shoppingCart.customerId().value())
         );
+    }
+
+
+    @Test
+    public void shouldFindByCustomerIdException_whenInvalidShoppingCart() {
+
+        Customer customer = CustomerTestDataBuilder.brandNewCustomer().build();
+
+        Assertions.assertThatExceptionOfType(ShoppingCartNotFoundException.class)
+                .isThrownBy( ()-> queryService.findByCustomerId(customer.id().value()));
     }
 
 
