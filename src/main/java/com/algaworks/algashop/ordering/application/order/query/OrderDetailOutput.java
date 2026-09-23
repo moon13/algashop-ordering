@@ -15,19 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class OrderDetailOutput {
-
     private String id;
     private CustomerMinimalOutput customer;
     private Integer totalItems;
     private BigDecimal totalAmount;
     private OffsetDateTime placedAt;
     private OffsetDateTime paidAt;
-    private OffsetDateTime cancelledAt;
+    private OffsetDateTime canceledAt;
     private OffsetDateTime readyAt;
     private String status;
     private String paymentMethod;
     private ShippingData shipping;
     private BillingData billing;
-    private List<OrderItemDetailOutput> items = new ArrayList<>();
 
+    private List<OrderItemDetailOutput> items = new ArrayList<>();
 }
