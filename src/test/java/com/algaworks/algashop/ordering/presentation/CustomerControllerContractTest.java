@@ -154,6 +154,7 @@ class CustomerControllerContractTest {
                  );
     }
 
+
     @Test
     public void findCustomersContract() {
         int sizeLimit = 5;
@@ -208,7 +209,9 @@ class CustomerControllerContractTest {
                         "content[1].archived", Matchers.is(customer2.getArchived()),
                         "content[1].registeredAt", Matchers.is(formatter.format(customer2.getRegisteredAt()))
 
+
                 );
+
     }
 
 }
