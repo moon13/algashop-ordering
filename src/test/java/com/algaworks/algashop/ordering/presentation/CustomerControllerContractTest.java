@@ -691,4 +691,83 @@ class CustomerControllerContractTest {
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
+
+    @Test
+    public void deleteCustomerError404Contract() {
+        UUID customerId = UUID.randomUUID();
+        Mockito.doThrow(DomainEntityNotFoundException.class)
+                .when(customerManagementApplicationService)
+                .archive(
+                        Mockito.any(UUID.class)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/v1/customers/{customerId}", customerId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .body(
+                        "type", Matchers.is("/errors/not-found"),
+                        "title", Matchers.is("Not found"),
+                        "status", Matchers.is(404)
+                );
+    }
+
+
+    @Test
+    public void deleteCustomerError422Contract() {
+        UUID customerId = UUID.randomUUID();
+        Mockito.doThrow(DomainException.class)
+                .when(customerManagementApplicationService)
+                .archive(
+                        Mockito.any(UUID.class)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/v1/customers/{customerId}", customerId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .body(
+                        "type", Matchers.is("/errors/unprocessable-entity"),
+                        "title", Matchers.is("Unprocessable Entity"),
+                        "status", Matchers.is(422)
+                );
+    }
+
+
+    @Test
+    public void deleteCustomerError500Contract() {
+
+        UUID customerId = UUID.randomUUID();
+        Mockito.doThrow(RuntimeException.class)
+                .when(customerManagementApplicationService)
+                .archive(
+                        Mockito.any(UUID.class)
+                );
+
+        RestAssuredMockMvc
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/v1/customers/{customerId}", customerId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .body(
+                        "type", Matchers.is("/errors/internal"),
+                        "title", Matchers.is("Internal Server Error"),
+                        "status", Matchers.is(500),
+                        "detail", Matchers.is("An unexpected internal error occurred")
+                );
+
+    }
+
+
 }
