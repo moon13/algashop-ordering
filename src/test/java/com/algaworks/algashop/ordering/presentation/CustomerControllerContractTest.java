@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
@@ -500,6 +501,61 @@ class CustomerControllerContractTest {
                         "address.state", Matchers.is(address.getState()),
                         "address.zipCode", Matchers.is(address.getZipCode())
                 );
+    }
+
+    @Test
+    public void updateCustomerError400Contract() {
+
+        UUID invalidCustomerId =  UUID.randomUUID();
+
+        Mockito.doThrow(MethodArgumentNotValidException.class)
+                .when(customerManagementApplicationService)
+                .update(
+                        Mockito.any(UUID.class),
+                        Mockito.any(CustomerUpdateInput.class)
+                );
+
+
+
+        String jsonInput = """
+                {
+                  "firstName": "",
+                  "lastName": "",
+                  "email": "johndoe@email.com",
+                  "document": "12345",
+                  "phone": "1191234564",
+                  "birthDate": "1991-07-05",
+                  "promotionNotificationsAllowed": false,
+                  "address": {
+                    "street": "Bourbon Street",
+                    "number": "2000",
+                    "complement": "apt 122",
+                    "neighborhood": "North Ville",
+                    "city": "Yostfort",
+                    "state": "South Carolina",
+                    "zipCode": "12321"
+                  }
+                }
+                """;
+
+
+        RestAssuredMockMvc
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(jsonInput)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .put("/api/v1/customers/{customerId}", invalidCustomerId)
+                .then()
+                .assertThat()
+                .contentType("application/problem+json")
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(
+                        "type", Matchers.is("/errors/invalid-fields"),
+                        "title", Matchers.is("invalid fields"),
+                        "status", Matchers.is(400)
+                );
+
     }
 
 
