@@ -508,20 +508,11 @@ class CustomerControllerContractTest {
 
         UUID invalidCustomerId =  UUID.randomUUID();
 
-        Mockito.doThrow(MethodArgumentNotValidException.class)
-                .when(customerManagementApplicationService)
-                .update(
-                        Mockito.any(UUID.class),
-                        Mockito.any(CustomerUpdateInput.class)
-                );
-
-
-
         String jsonInput = """
                 {
                   "firstName": "",
                   "lastName": "",
-                  "email": "johndoe@email.com",
+                  "email": "invalid@email.com",
                   "document": "12345",
                   "phone": "1191234564",
                   "birthDate": "1991-07-05",
@@ -576,9 +567,9 @@ class CustomerControllerContractTest {
 
         String jsonInput = """
                 {
-                  "firstName": "",
-                  "lastName": "",
-                  "email": "johndoe@email.com",
+                 "firstName": "John",
+                 "lastName": "Doe",
+                  "email": "invalid@email.com",
                   "document": "12345",
                   "phone": "1191234564",
                   "birthDate": "1991-07-05",
@@ -632,9 +623,9 @@ class CustomerControllerContractTest {
 
         String jsonInput = """
                 {
-                  "firstName": "",
-                  "lastName": "",
-                  "email": "johndoe@email.com",
+                  "firstName": "John",
+                 "lastName": "Doe",
+                  "email": "invalid@email.com",
                   "document": "12345",
                   "phone": "1191234564",
                   "birthDate": "1991-07-05",
@@ -688,9 +679,9 @@ class CustomerControllerContractTest {
 
         String jsonInput = """
                 {
-                  "firstName": "",
-                  "lastName": "",
-                  "email": "johndoe@email.com",
+                  "firstName": "John",
+                 "lastName": "Doe",
+                  "email": "invalid@email.com",
                   "document": "12345",
                   "phone": "1191234564",
                   "birthDate": "1991-07-05",
