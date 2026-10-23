@@ -1,8 +1,8 @@
 plugins {
 	id 'java'
-    id 'idea'
-	id 'org.springframework.boot' version '3.4.11'
+	id 'org.springframework.boot' version '3.5.5'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.cloud.contract' version '4.3.0'
 }
 
 group = 'com.algaworks.algashop'
@@ -26,6 +26,17 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2025.0.0")
+}
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.fasterxml.uuid:java-uuid-generator:5.1.0'
@@ -34,6 +45,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.modelmapper:modelmapper:3.2.4'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 	runtimeOnly 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -43,6 +55,19 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	mockitoAgent('org.mockito:mockito-core:5.14.2') {transitive = false}
+}
+
+contracts {
+
+}
+
+
+tasks.named('contractTest') {
+	useJUnitPlatform()
+}
+
+tasks.named('check') {
+	dependsOn(test, contractTest, integrationTest)
 }
 
 tasks.named('test') {
