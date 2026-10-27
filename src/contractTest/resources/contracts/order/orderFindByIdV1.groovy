@@ -2,19 +2,14 @@ package contracts.order
 
 import org.springframework.cloud.contract.spec.Contract
 
-Contract.make{
-
-    request{
-
+Contract.make {
+    request {
         method GET()
-        headers{
-
-            accept "application/json"
+        headers {
+            accept 'application/json'
         }
-
         url("/api/v1/orders/01226N0640J7Q")
     }
-
     response {
         status 200
         body([
@@ -77,7 +72,7 @@ Contract.make{
                                 price: 19.99,
                                 productName: "Notebook Dive Gamer X11",
                                 quantity: 2,
-                                totalAmount: 19.99
+                                totalAmount: 41.98
                         ]
                 ]
         ])

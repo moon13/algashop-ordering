@@ -2,6 +2,7 @@ package com.algaworks.algashop.ordering.contract.base;
 
 import com.algaworks.algashop.ordering.application.order.query.OrderDetailOutputTestDataBuilder;
 import com.algaworks.algashop.ordering.application.order.query.OrderQueryService;
+import com.algaworks.algashop.ordering.presentation.OrderController;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -13,29 +14,28 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 
-@WebMvcTest(controllers = OrderBase.class)
+@WebMvcTest(controllers = OrderController.class)
 public class OrderBase {
 
-     @Autowired
+    @Autowired
     private WebApplicationContext context;
 
-     @MockitoBean
-     private OrderQueryService orderQueryService;
+    @MockitoBean
+    private OrderQueryService orderQueryService;
 
-     @BeforeEach
-     public void setUp() {
+    @BeforeEach
+    void setUp() {
+        RestAssuredMockMvc.mockMvc(
+                MockMvcBuilders.webAppContextSetup(context)
+                        .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
+                        .build()
+        );
 
-         RestAssuredMockMvc.mockMvc(
+        RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
 
-                 MockMvcBuilders.webAppContextSetup(context)
-                         .defaultResponseCharacterEncoding(StandardCharsets.UTF_8)
-                         .build()
-         );
-
-          RestAssuredMockMvc.enableLoggingOfRequestAndResponseIfValidationFails();
-          String id = "01226N0640J7Q";
-          Mockito.when(orderQueryService.findById(id))
-                  .thenReturn(OrderDetailOutputTestDataBuilder.placedOrder(id).build());
-     }
+        String id = "01226N0640J7Q";
+        Mockito.when(orderQueryService.findById(id))
+                .thenReturn(OrderDetailOutputTestDataBuilder.placedOrder(id).build());
+    }
 
 }

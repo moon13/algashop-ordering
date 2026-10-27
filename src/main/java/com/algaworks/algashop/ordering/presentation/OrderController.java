@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrderController {
 
-     private final OrderQueryService orderQueryService;
+    private final OrderQueryService orderQueryService;
 
-     @GetMapping("/{orderId}")
+    @GetMapping("/{orderId}")
     public OrderDetailOutput findById(@PathVariable String orderId) {
-          return orderQueryService.findById(orderId);
+        return orderQueryService.findById(orderId);
+    }
 
-     }
 }
