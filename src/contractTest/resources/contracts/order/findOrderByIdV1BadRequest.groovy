@@ -12,7 +12,7 @@ Contract.make {
             url "/api/v1/orders"
 
             headers {
-                contentType("application/json")
+                contentType("application/vnd.order-with-product.v1+json")
             }
 
             body([
@@ -42,7 +42,7 @@ Contract.make {
                             productId: "must not be null",
                             customerId: "must not be null",
                             shipping: "must not be null",
-                            paymentMethod: "must not be null",
+                            paymentMethod: "must not be blank",
                             billing: "must not be null",
                             quantity: "must not be null"
                     ]
