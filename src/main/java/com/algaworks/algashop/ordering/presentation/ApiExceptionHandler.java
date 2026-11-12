@@ -33,7 +33,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setTitle("invalid fields");
+        problemDetail.setTitle("Invalid fields");
         problemDetail.setDetail("One or more fields are invalid");
         problemDetail.setType(URI.create("/errors/invalid-fields"));
 

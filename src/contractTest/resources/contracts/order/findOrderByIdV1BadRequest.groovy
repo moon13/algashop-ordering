@@ -12,23 +12,16 @@ Contract.make {
             url "/api/v1/orders"
 
             headers {
-                contentType("application/vnd.order-with-product.v1+json")
+                contentType("application/json")
             }
 
             body([
-                    id: null,
-                    customer: null,
-                    totalItems: 2,
-                    totalAmount: 41.98,
-                    placedAt: null,
-                    canceledAt: null,
-                    paidAt: null,
-                    readyAt: null,
-                    status: "PLACED",
-                    paymentMethod: "GATEWAY_BALANCE",
+                    productId: null,
+                    customerId: null,
                     shipping: null,
                     billing: null,
-                    items: null
+                    quantity: null,
+                    paymentMethod: null,
             ])
         }
 
@@ -46,8 +39,12 @@ Contract.make {
                     detail: "One or more fields are invalid",
                     instance: "/api/v1/orders",
                     fields: [
-                            id: "must not be blank",
-                            customer: "must not be null"
+                            productId: "must not be null",
+                            customerId: "must not be null",
+                            shipping: "must not be null",
+                            paymentMethod: "must not be null",
+                            billing: "must not be null",
+                            quantity: "must not be null"
                     ]
             )
         }
