@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-       private final MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -79,6 +79,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("Conflict");
         problemDetail.setDetail(ex.getMessage());
         problemDetail.setType(URI.create("/errors/conflict"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(GatewayTimeoutException.class)
+    public ProblemDetail handleGatewayTimeoutException(GatewayTimeoutException e) {
+        log.error(e.getMessage(), e);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.GATEWAY_TIMEOUT);
+        problemDetail.setTitle("Gateway Timeout");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("/errors/gateway-timeout"));
+        return problemDetail;
+    }
+
+    @ExceptionHandler(BadGatewayException.class)
+    public ProblemDetail handleBadGatewayException(BadGatewayException e) {
+        log.error(e.getMessage(), e);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_GATEWAY);
+        problemDetail.setTitle("Bad Gateway");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setType(URI.create("/errors/bad-gateway"));
         return problemDetail;
     }
 
