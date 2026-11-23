@@ -6,6 +6,7 @@ import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCa
 import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/shopping-carts")
 @RequiredArgsConstructor
+@Slf4j
 public class ShoppingCartController {
 
     private final ShoppingCartManagementApplicationService managementService;
@@ -22,8 +24,23 @@ public class ShoppingCartController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCartOutput create(@RequestBody @Valid ShoppingCartInput input) {
+
+        log.info("1 - Iniciando criação do carrinho. CustomerId: {}",
+                input.getCustomerId());
+
         UUID shoppingCartId = managementService.createNew(input.getCustomerId());
-        return queryService.findById(shoppingCartId);
+
+        log.info("2 - Carrinho criado/recuperado. ShoppingCartId: {}",
+                shoppingCartId);
+
+        ShoppingCartOutput output = queryService.findById(shoppingCartId);
+
+        log.info("3 - ShoppingCartOutput convertido com sucesso");
+
+        return output;
+
+      //  UUID shoppingCartId = managementService.createNew(input.getCustomerId());
+       // return queryService.findById(shoppingCartId);
     }
 
     @GetMapping("/{shoppingCartId}")

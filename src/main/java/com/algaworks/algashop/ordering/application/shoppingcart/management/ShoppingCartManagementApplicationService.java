@@ -8,6 +8,7 @@ import com.algaworks.algashop.ordering.domain.model.product.ProductId;
 import com.algaworks.algashop.ordering.domain.model.product.ProductNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.shoppingcart.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShoppingCartManagementApplicationService {
 
     private final ShoppingCarts shoppingCarts;
@@ -41,9 +43,20 @@ public class ShoppingCartManagementApplicationService {
 
     @Transactional
     public UUID createNew(UUID rawCustomerId) {
+        log.info("ETAPA 1 - Recebendo customerId: {}", rawCustomerId);
+
         Objects.requireNonNull(rawCustomerId);
-        ShoppingCart shoppingCart = shoppingService.startShopping(new CustomerId(rawCustomerId));
+
+        ShoppingCart shoppingCart =
+                shoppingService.startShopping(new CustomerId(rawCustomerId));
+
+        log.info("ETAPA 2 - ShoppingCart retornado pelo domínio: {}",
+                shoppingCart.id().value());
+
         shoppingCarts.add(shoppingCart);
+
+        log.info("ETAPA 3 - ShoppingCart persistido");
+
         return shoppingCart.id().value();
     }
 
