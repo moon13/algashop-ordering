@@ -5,6 +5,7 @@ import com.algaworks.algashop.ordering.application.customer.management.CustomerI
 import com.algaworks.algashop.ordering.application.customer.management.CustomerManagementApplicationService;
 import com.algaworks.algashop.ordering.application.customer.management.CustomerUpdateInput;
 import com.algaworks.algashop.ordering.application.customer.query.*;
+import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
 import com.algaworks.algashop.ordering.domain.model.DomainEntityNotFoundException;
 import com.algaworks.algashop.ordering.domain.model.DomainException;
 import com.algaworks.algashop.ordering.domain.model.customer.CustomerEmailIsInUseException;
@@ -39,6 +40,9 @@ class CustomerControllerContractTest {
 
     @MockitoBean
     private CustomerQueryService customerQueryService;
+
+    @MockitoBean
+    private ShoppingCartQueryService shoppingCartQueryService;
 
 
     @BeforeEach
@@ -541,7 +545,7 @@ class CustomerControllerContractTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(
                         "type", Matchers.is("/errors/invalid-fields"),
-                        "title", Matchers.is("invalid fields"),
+                        "title", Matchers.is("Invalid fields"),
                         "status", Matchers.is(400)
                 );
 
