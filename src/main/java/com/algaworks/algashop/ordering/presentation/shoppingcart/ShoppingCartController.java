@@ -4,6 +4,9 @@ import com.algaworks.algashop.ordering.application.shoppingcart.management.Shopp
 import com.algaworks.algashop.ordering.application.shoppingcart.management.ShoppingCartManagementApplicationService;
 import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartOutput;
 import com.algaworks.algashop.ordering.application.shoppingcart.query.ShoppingCartQueryService;
+import com.algaworks.algashop.ordering.domain.model.customer.CustomerNotFoundException;
+import com.algaworks.algashop.ordering.domain.model.product.ProductNotFoundException;
+import com.algaworks.algashop.ordering.presentation.UnprocessableEntityException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +31,13 @@ public class ShoppingCartController {
         log.info("1 - Iniciando criação do carrinho. CustomerId: {}",
                 input.getCustomerId());
 
-        UUID shoppingCartId = managementService.createNew(input.getCustomerId());
+        UUID shoppingCartId = null;
+                try {
+                    shoppingCartId = managementService.
+                            createNew(input.getCustomerId());
+                }catch(CustomerNotFoundException e) {
+                    throw new UnprocessableEntityException(e.getMessage(),e);
+                }
 
         log.info("2 - Carrinho criado/recuperado. ShoppingCartId: {}",
                 shoppingCartId);
@@ -71,7 +80,11 @@ public class ShoppingCartController {
     public void addItem(@PathVariable UUID shoppingCartId,
                         @RequestBody @Valid ShoppingCartItemInput input) {
         input.setShoppingCartId(shoppingCartId);
-        managementService.addItem(input);
+        try {
+            managementService.addItem(input);
+        }catch(ProductNotFoundException e) {
+            throw new  UnprocessableEntityException(e.getMessage(),e);
+        }
     }
 
     @DeleteMapping("/{shoppingCartId}/items/{itemId}")
