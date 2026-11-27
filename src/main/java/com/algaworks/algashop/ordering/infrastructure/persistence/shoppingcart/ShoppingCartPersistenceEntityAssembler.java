@@ -6,7 +6,11 @@ import com.algaworks.algashop.ordering.infrastructure.persistence.customer.Custo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,6 +23,10 @@ public class ShoppingCartPersistenceEntityAssembler {
         return merge(new ShoppingCartPersistenceEntity(), shoppingCart);
     }
 
+    public ShoppingCartItemPersistenceEntity fromDomain(ShoppingCartItem item) {
+        return mergeItem(new ShoppingCartItemPersistenceEntity(), item);
+    }
+
     public ShoppingCartPersistenceEntity merge(ShoppingCartPersistenceEntity persistenceEntity,
                                                ShoppingCart shoppingCart) {
         persistenceEntity.setId(shoppingCart.id().value());
@@ -26,7 +34,9 @@ public class ShoppingCartPersistenceEntityAssembler {
         persistenceEntity.setTotalAmount(shoppingCart.totalAmount().value());
         persistenceEntity.setTotalItems(shoppingCart.totalItems().value());
         persistenceEntity.setCreatedAt(shoppingCart.createdAt());
-        persistenceEntity.replaceItems(toOrderItemsEntities(shoppingCart.items()));
+       // persistenceEntity.replaceItems(toOrderItemsEntities(shoppingCart.items()));
+        Set<ShoppingCartItemPersistenceEntity> mergeItems = mergeItems(shoppingCart, persistenceEntity);
+        persistenceEntity.replaceItems(mergeItems);
         persistenceEntity.addEvents(shoppingCart.domainEvents());
         return persistenceEntity;
     }
@@ -59,4 +69,30 @@ public class ShoppingCartPersistenceEntityAssembler {
                 .totalAmount(source.totalAmount().value())
                 .build();
     }
+
+    private Set<ShoppingCartItemPersistenceEntity> mergeItems(ShoppingCart shoppingCart,
+                                                              ShoppingCartPersistenceEntity shoppingCartPersistenceEntity){
+        Set<ShoppingCartItem> newOrUpdateItems = shoppingCart.items();
+        if (newOrUpdateItems == null || shoppingCart.items().isEmpty()){
+            return new HashSet<>();
+        }
+
+        Set<ShoppingCartItemPersistenceEntity> existingItems = shoppingCartPersistenceEntity.getItems();
+
+        if(existingItems == null || existingItems.isEmpty()){
+            return newOrUpdateItems.stream().map(this::fromDomain).collect(Collectors.toSet());
+        }
+
+        Map<UUID, ShoppingCartItemPersistenceEntity> existingMap = existingItems.stream()
+                .collect(Collectors.toMap(ShoppingCartItemPersistenceEntity::getId, item -> item));
+
+        return newOrUpdateItems.stream()
+                .map(shoppingCartItem -> {
+                    ShoppingCartItemPersistenceEntity itemPersistence = existingMap.getOrDefault(
+                            shoppingCartItem.id().value(), new ShoppingCartItemPersistenceEntity()
+                    );
+                    return mergeItem(itemPersistence, shoppingCartItem);
+                }).collect(Collectors.toSet());
+    }
+
 }
