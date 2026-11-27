@@ -37,6 +37,8 @@ public class CustomerControllerIT {
 
     private static final UUID validCustomerId = UUID.fromString("6e148bd5-47f6-4022-b9da-07cfaa294f7a");
 
+    private static final UUID invalidCustomerId = UUID.fromString("7f3a9c21-8b64-4e52-a7d1-3c9f0b6e2d85");
+
     @BeforeEach
     public void setup() {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -75,6 +77,26 @@ public class CustomerControllerIT {
         Assertions.assertThat(customerRepository.existsById(createdCustomerId)).isTrue();
     }
 
+
+    @Test
+    public void shouldNotCreateCustomer() {
+        String json = AlgaShopResourceUtils.readContent("json/create-invalid-customer.json");
+
+        RestAssured
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(json)
+                .when()
+                .post("/api/v1/customers")
+                .then()
+                .assertThat()
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+
+    }
+
+
     @Test
     public void shouldArchiveCustomer() {
         RestAssured
@@ -89,4 +111,20 @@ public class CustomerControllerIT {
         Assertions.assertThat(customerRepository.existsById(validCustomerId)).isTrue();
         Assertions.assertThat(customerRepository.findById(validCustomerId).orElseThrow().getArchived()).isTrue();
     }
+
+    @Test
+    public void shouldNotArchiveInvalidCustomer() {
+        RestAssured
+                .given()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/api/v1/customers/{customerId}", invalidCustomerId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+
+        Assertions.assertThat(customerRepository.existsById(invalidCustomerId)).isFalse();
+        Assertions.assertThat(customerRepository.findById(invalidCustomerId)).isNotPresent();
+    }
+
 }
