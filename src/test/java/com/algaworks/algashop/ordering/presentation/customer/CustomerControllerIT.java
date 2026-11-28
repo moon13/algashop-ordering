@@ -30,8 +30,6 @@ public class CustomerControllerIT {
     @LocalServerPort
     private int port;
 
-    private static boolean databaseInitialized;
-
     @Autowired
     private CustomerPersistenceEntityRepository customerRepository;
 

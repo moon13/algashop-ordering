@@ -56,4 +56,6 @@ public interface ShoppingCartPersistenceEntityRepository extends JpaRepository<S
 				AND i2.productId = :productId)
 		""")
 	void recalculateTotalsForCartsWithProduct(@Param("productId") UUID productId);
+
+	boolean existsByCustomer_Id(UUID customerId);
 }
